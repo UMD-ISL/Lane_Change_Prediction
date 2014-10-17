@@ -1,11 +1,7 @@
-%% post_normalization
+%%post
 
-
-
-%% Initialization
 clear all; clc;
 %# warning off;
-
 %% Granger Causality Analysis
 %% define variables
 rootIn='N:\tianyu\code1\';
