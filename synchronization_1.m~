@@ -33,7 +33,7 @@
 %                University of Michigan Dearborn
 
 %% Initialization
-clear all; clc; tic;
+clear all; clc;
 %# warning off;
 
 % CD the data folder
@@ -53,7 +53,7 @@ for i = 1:size(fd_list,1)
 end
 num_folder = num_folder - 2;    % ignore './' and '../'
 
-% Process RSP Data
+% Process Rsp Data
 for m = 1:num_folder
     [RspData,RspTxt,~] = xlsread(strcat(Data_directory, num2str(m), ...
         '/RSP.xlsx'));
@@ -63,7 +63,7 @@ for m = 1:num_folder
     end
 end
 
-% Process GSR Data
+% Process Gsr Data
 [GsrData,GsrTxt,~] = xlsread(strcat(Data_directory, num2str(m), ...
     '/GSR.xlsx'));
 if (GsrData(1,1) > 0.5) && (GsrData(end,1) < 0.5)
@@ -72,49 +72,13 @@ if (GsrData(1,1) > 0.5) && (GsrData(end,1) < 0.5)
 end
 
 % Process ECG Data
-[EcgData,EcgTxt,~] = xlsread(strcat(Data_directory, num2str(m), ...
-    '/HR.xlsx'));
-if (EcgData(1,1) > 0.5) && (EcgData(end,1) < 0.5)
-    Reverse = find(EcgData(:,1) < 0.5);
-    EcgData(Reverse,1) = EcgData(Reverse,1) + 1;
+[EcgData,EcgTxt,~]=xlsread(strcat('../Lane Change original data/',num2str(m),'/HR.xlsx'));
+if EcgData(1,1)>0.5 && EcgData(end,1)<0.5
+    Reverse=find(EcgData(:,1)<0.5);
+    EcgData(Reverse,1)=EcgData(Reverse,1)+1;
 end
 
-% PROCESS OBD DATA
-[VehData,VehTxt,~] = xlsread(strcat(Data_directory, num2str(m), ...
-    '/OBD.xlsx'));
 
-% PROCESS GSR_RAW DATA
-[GSR_RAWData,GSR_RAWTxt] = xlsread(strcat(Data_directory, num2str(m), ...
-    '/GSR_RAW.xlsx'));
-if (GSR_RAWData(1,1) > 0.5) && (GSR_RAWData(end,1) < 0.5)
-    Reverse = find(GSR_RAWData(:,1)<0.5);
-    GSR_RAWData(Reverse,1) = GSR_RAWData(Reverse,1) + 1;
-end
 
-% PROCESS ECG_RAW DATA
-[ECG_RAWData,ECG_RAWTxt] = xlsread(strcat(Data_directory, num2str(m), ...
-    '/ECG_RAW.xlsx'));
-if (ECG_RAWData(1,1) > 0.5) && (ECG_RAWData(end,1) < 0.5)
-    Reverse = find(ECG_RAWData(:,1)<0.5);
-    ECG_RAWData(Reverse,1) = ECG_RAWData(Reverse,1) + 1;
-end
-
-% PROCESS BELT DATA
-[BELT_RAWData,BELT_RAWTxt] = xlsread(strcat(Data_directory, num2str(m), ...
-    '/Belt.xlsx'));
-if (BELT_RAWData(1,1) > 0.5) && (BELT_RAWData(end,1) < 0.5)
-    Reverse = find(BELT_RAWData(:,1) < 0.5);
-    BELT_RAWData(Reverse,1) = BELT_RAWData(Reverse,1) + 1;
-end
-
-% PROCESS ACC DATA
-[ACC_RAWData,ACC_RAWTxt] = xlsread(strcat(Data_directory, num2str(m), ...
-    '/Acc.xlsx'));
-if (ACC_RAWData(1,1) > 0.5) && (ACC_RAWData(end,1) < 0.5)
-    Reverse = find(ACC_RAWData(:,1)<0.5);
-    ACC_RAWData(Reverse,1) = ACC_RAWData(Reverse,1) + 1;
-end
-
-toc; % end of program
 
 

@@ -67,7 +67,9 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
   </style></head><body><div class="content"><h1>Synchronization_1</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Description</a></li><li><a href="#8">Initialization</a></li></ul></div><h2>Description<a name="1"></a></h2><pre>File type:    Executable file</pre><pre>Summary:
-convert xlsx data into mat</pre><pre>Examples:</pre><pre class="codeinput"><span class="comment">%Provide sample usage code here</span>
+This is the first file need to be excute for the whole project.
+This script converts all .xlsx data into .mat format for further
+processing</pre><pre>Examples:</pre><pre class="codeinput"><span class="comment">%Provide sample usage code here</span>
 </pre><pre>Algorithm:</pre><pre class="codeinput"><span class="comment">%df</span>
 <span class="comment">%dsf</span>
 </pre><pre>See also:
@@ -83,14 +85,80 @@ Copyright:    Intelligent System Laboratory
 <span class="comment">% CD the data folder</span>
 <span class="comment">% addpath('C:\Users\Xipeng1990\Desktop\Synchronization')</span>
 <span class="comment">% cd('./Data3');</span>
-fd_list = dir(<span class="string">'../Lane Change original data'</span>);
-num_fd = 0;
 
+Data_directory = <span class="string">'../Lane_Change_original_data/'</span>;
+fd_list = dir(Data_directory);
+num_folder = 0;
+
+<span class="comment">% search the data folder and list all the folders and ignore files.</span>
 <span class="keyword">for</span> i = 1:size(fd_list,1)
     stuct = fd_list(i,1);
     <span class="keyword">if</span> (stuct.isdir == 1)
-        num_fd = num_fd + 1;
+        num_folder = num_folder + 1;
     <span class="keyword">end</span>
+<span class="keyword">end</span>
+num_folder = num_folder - 2;    <span class="comment">% ignore './' and '../'</span>
+
+<span class="comment">% Process RSP Data</span>
+<span class="keyword">for</span> m = 1:num_folder
+    [RspData,RspTxt,~] = xlsread(strcat(Data_directory, num2str(m), <span class="keyword">...</span>
+        <span class="string">'/RSP.xlsx'</span>));
+    <span class="keyword">if</span> (RspData(1,1) &gt; 0.5) &amp;&amp; (RspData(end,1) &lt; 0.5)
+        Reverse = find(RspData(:,1) &lt; 0.5);
+        RspData(Reverse,1) = RspData(Reverse,1) + 1;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">% Process GSR Data</span>
+[GsrData,GsrTxt,~] = xlsread(strcat(Data_directory, num2str(m), <span class="keyword">...</span>
+    <span class="string">'/GSR.xlsx'</span>));
+<span class="keyword">if</span> (GsrData(1,1) &gt; 0.5) &amp;&amp; (GsrData(end,1) &lt; 0.5)
+    Reverse = find(GsrData(:,1) &lt; 0.5);
+    GsrData(Reverse,1) = GsrData(Reverse,1) + 1;
+<span class="keyword">end</span>
+
+<span class="comment">% Process ECG Data</span>
+[EcgData,EcgTxt,~] = xlsread(strcat(Data_directory, num2str(m), <span class="keyword">...</span>
+    <span class="string">'/HR.xlsx'</span>));
+<span class="keyword">if</span> (EcgData(1,1) &gt; 0.5) &amp;&amp; (EcgData(end,1) &lt; 0.5)
+    Reverse = find(EcgData(:,1) &lt; 0.5);
+    EcgData(Reverse,1) = EcgData(Reverse,1) + 1;
+<span class="keyword">end</span>
+
+<span class="comment">% PROCESS OBD DATA</span>
+[VehData,VehTxt,~] = xlsread(strcat(Data_directory, num2str(m), <span class="keyword">...</span>
+    <span class="string">'/OBD.xlsx'</span>));
+
+<span class="comment">% PROCESS GSR_RAW DATA</span>
+[GSR_RAWData,GSR_RAWTxt] = xlsread(strcat(Data_directory, num2str(m), <span class="keyword">...</span>
+    <span class="string">'/GSR_RAW.xlsx'</span>));
+<span class="keyword">if</span> (GSR_RAWData(1,1) &gt; 0.5) &amp;&amp; (GSR_RAWData(end,1) &lt; 0.5)
+    Reverse = find(GSR_RAWData(:,1)&lt;0.5);
+    GSR_RAWData(Reverse,1) = GSR_RAWData(Reverse,1) + 1;
+<span class="keyword">end</span>
+
+<span class="comment">% PROCESS ECG_RAW DATA</span>
+[ECG_RAWData,ECG_RAWTxt] = xlsread(strcat(Data_directory, num2str(m), <span class="keyword">...</span>
+    <span class="string">'/ECG_RAW.xlsx'</span>));
+<span class="keyword">if</span> (ECG_RAWData(1,1) &gt; 0.5) &amp;&amp; (ECG_RAWData(end,1) &lt; 0.5)
+    Reverse = find(ECG_RAWData(:,1)&lt;0.5);
+    ECG_RAWData(Reverse,1) = ECG_RAWData(Reverse,1) + 1;
+<span class="keyword">end</span>
+
+<span class="comment">% PROCESS BELT DATA</span>
+[BELT_RAWData,BELT_RAWTxt]=xlsread(strcat(Data_directory, num2str(m), <span class="keyword">...</span>
+    <span class="string">'/Belt.xlsx'</span>));
+<span class="keyword">if</span> (BELT_RAWData(1,1) &gt; 0.5) &amp;&amp; (BELT_RAWData(end,1) &lt; 0.5)
+    Reverse = find(BELT_RAWData(:,1) &lt; 0.5);
+    BELT_RAWData(Reverse,1) = BELT_RAWData(Reverse,1) + 1;
+<span class="keyword">end</span>
+
+<span class="comment">% PROCESS ACC DATA</span>
+[ACC_RAWData,ACC_RAWTxt] = xlsread(strcat(Data_directory, num2str(m), <span class="keyword">...</span>
+    <span class="string">'/Acc.xlsx'</span>));
+<span class="keyword">if</span> (ACC_RAWData(1,1) &gt; 0.5) &amp;&amp; (ACC_RAWData(end,1) &lt; 0.5)
+    Reverse = find(ACC_RAWData(:,1)&lt;0.5);
+    ACC_RAWData(Reverse,1) = ACC_RAWData(Reverse,1) + 1;
 <span class="keyword">end</span>
 </pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
@@ -102,7 +170,9 @@ num_fd = 0;
 
 %%
 %  Summary:
-%  convert xlsx data into mat
+%  This is the first file need to be excute for the whole project.
+%  This script converts all .xlsx data into .mat format for further
+%  processing
 
 %%
 %  Examples: 
@@ -133,15 +203,83 @@ clear all; clc;
 % CD the data folder
 % addpath('C:\Users\Xipeng1990\Desktop\Synchronization')
 % cd('./Data3');
-fd_list = dir('../Lane Change original data');
-num_fd = 0;
 
+Data_directory = '../Lane_Change_original_data/';
+fd_list = dir(Data_directory);
+num_folder = 0;
+
+% search the data folder and list all the folders and ignore files.
 for i = 1:size(fd_list,1)
     stuct = fd_list(i,1);
     if (stuct.isdir == 1)
-        num_fd = num_fd + 1;
+        num_folder = num_folder + 1;
     end
 end
+num_folder = num_folder - 2;    % ignore './' and '../'
+
+% Process RSP Data
+for m = 1:num_folder
+    [RspData,RspTxt,~] = xlsread(strcat(Data_directory, num2str(m), ...
+        '/RSP.xlsx'));
+    if (RspData(1,1) > 0.5) && (RspData(end,1) < 0.5)
+        Reverse = find(RspData(:,1) < 0.5);
+        RspData(Reverse,1) = RspData(Reverse,1) + 1;
+    end
+end
+
+% Process GSR Data
+[GsrData,GsrTxt,~] = xlsread(strcat(Data_directory, num2str(m), ...
+    '/GSR.xlsx'));
+if (GsrData(1,1) > 0.5) && (GsrData(end,1) < 0.5)
+    Reverse = find(GsrData(:,1) < 0.5);
+    GsrData(Reverse,1) = GsrData(Reverse,1) + 1;
+end
+
+% Process ECG Data
+[EcgData,EcgTxt,~] = xlsread(strcat(Data_directory, num2str(m), ...
+    '/HR.xlsx'));
+if (EcgData(1,1) > 0.5) && (EcgData(end,1) < 0.5)
+    Reverse = find(EcgData(:,1) < 0.5);
+    EcgData(Reverse,1) = EcgData(Reverse,1) + 1;
+end
+
+% PROCESS OBD DATA
+[VehData,VehTxt,~] = xlsread(strcat(Data_directory, num2str(m), ...
+    '/OBD.xlsx'));
+
+% PROCESS GSR_RAW DATA
+[GSR_RAWData,GSR_RAWTxt] = xlsread(strcat(Data_directory, num2str(m), ...
+    '/GSR_RAW.xlsx'));
+if (GSR_RAWData(1,1) > 0.5) && (GSR_RAWData(end,1) < 0.5)
+    Reverse = find(GSR_RAWData(:,1)<0.5);
+    GSR_RAWData(Reverse,1) = GSR_RAWData(Reverse,1) + 1;
+end
+
+% PROCESS ECG_RAW DATA
+[ECG_RAWData,ECG_RAWTxt] = xlsread(strcat(Data_directory, num2str(m), ...
+    '/ECG_RAW.xlsx'));
+if (ECG_RAWData(1,1) > 0.5) && (ECG_RAWData(end,1) < 0.5)
+    Reverse = find(ECG_RAWData(:,1)<0.5);
+    ECG_RAWData(Reverse,1) = ECG_RAWData(Reverse,1) + 1;
+end
+
+% PROCESS BELT DATA
+[BELT_RAWData,BELT_RAWTxt]=xlsread(strcat(Data_directory, num2str(m), ...
+    '/Belt.xlsx'));
+if (BELT_RAWData(1,1) > 0.5) && (BELT_RAWData(end,1) < 0.5)
+    Reverse = find(BELT_RAWData(:,1) < 0.5);
+    BELT_RAWData(Reverse,1) = BELT_RAWData(Reverse,1) + 1;
+end
+
+% PROCESS ACC DATA
+[ACC_RAWData,ACC_RAWTxt] = xlsread(strcat(Data_directory, num2str(m), ...
+    '/Acc.xlsx'));
+if (ACC_RAWData(1,1) > 0.5) && (ACC_RAWData(end,1) < 0.5)
+    Reverse = find(ACC_RAWData(:,1)<0.5);
+    ACC_RAWData(Reverse,1) = ACC_RAWData(Reverse,1) + 1;
+end
+
+
 
 
 ##### SOURCE END #####
