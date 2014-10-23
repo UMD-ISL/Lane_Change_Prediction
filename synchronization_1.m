@@ -36,7 +36,6 @@ clear all; clc;     % Clear environment, and start counting running time
 ini = IniConfig();
 ini.ReadFile('configuration.ini');
 
-%Data_directory = '../Lane_Change_original_data/';
 Data_Path = ini.GetValues('Path Setting', 'DATA_PATH');
 fd_list = dir(Data_Path);
 num_folder = 0;
