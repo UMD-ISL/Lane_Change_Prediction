@@ -167,3 +167,5 @@ for m=1:size(vedio_signals,1)
 end
 save('./synchronization_3_Output/statistics.mat', 'num_Lane_Change');
 toc;    % end of program
+
+copyfile('./synchronization_3_Output', './Synchronized_Dataset');

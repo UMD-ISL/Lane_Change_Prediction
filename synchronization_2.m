@@ -112,12 +112,3 @@ for m = 1:size(vedio_signals, 1)
     
     save(strcat('./synchronization_2_Output/Vedio_', num2str(m), '_After_Denoised_Data.mat'),'Ecg_Data_HR_New', 'diff_Ecg_HR', 'Ecg_Data_RR_New', 'diff_Ecg_RR');
 end
-
-%%
-clc; clear all;
-NumLC=0;
-Signal=dir('Before_denoise/*.mat');
-for m=1:size(Signal,1)
-load(strcat('Before_denoise/Before_denoise',num2str(m),'.mat'));
-       
-end
