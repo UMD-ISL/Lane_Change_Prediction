@@ -1,0 +1,379 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Synchronization_3.m</title><meta name="generator" content="MATLAB 8.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-23"><meta name="DC.source" content="synchronization_3.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Synchronization_3.m</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Description</a></li><li><a href="#7">Processing</a></li><li><a href="#9">detrend for HR</a></li><li><a href="#10">process vehicle data</a></li><li><a href="#11">startTime information extraction for synchronizing signals</a></li><li><a href="#12">synchronisation : This part is used to synchronize the data</a></li><li><a href="#13">Up-Sampling for multiple signals</a></li><li><a href="#14">Down-Sampling processing</a></li><li><a href="#15">doing with target</a></li></ul></div><h2>Description<a name="1"></a></h2><pre>File type:       Procedure</pre><pre>Summary:
+Detrend processing</pre><pre>Examples:</pre><pre class="codeinput"><span class="comment">%Provide sample usage code here</span>
+</pre><pre>Algorithm:</pre><pre class="codeinput"><span class="comment">%df</span>
+<span class="comment">%dsf</span>
+</pre><pre>See also:
+* ITEM1
+* ITEM2</pre><pre>Author:       Yuan Ma
+Date:         Oct.18.2014
+Revision:     0.1
+Partner:      Worked with Tianyu Wang, Yulong Li
+Copyright:    Intelligent System Laboratory
+              University of Michigan Dearborn</pre><pre class="codeinput">clc; clear <span class="string">all</span>;
+num_Lane_Change = 0;
+vedio_signals = dir(<span class="string">'./synchronization_1_Output/Vedio_*.mat'</span>);
+</pre><h2>Processing<a name="7"></a></h2><pre class="codeinput">tic;
+<span class="keyword">for</span> m=1:size(vedio_signals,1)
+</pre><pre class="codeinput">    load(strcat(<span class="string">'./synchronization_1_Output/Vedio_'</span> ,num2str(m), <span class="string">'_Before_Denoised_Data.mat'</span>));
+    load(strcat(<span class="string">'./synchronization_2_Output/Vedio_'</span> ,num2str(m), <span class="string">'_After_Denoised_Data.mat'</span>));
+
+    Ecg_Data(:,2)=Ecg_Data_HR_New(:,2);
+    Ecg_Data(:,3)=Ecg_Data_RR_New(:,2);
+    [R,~]=find(isnan(Ecg_Data(:,2)));
+    Ecg_Data(R,:)=[];
+    [R,~]=find(isnan(Ecg_Data(:,3)));
+    Ecg_Data(R,:)=[];
+</pre><h2>detrend for HR<a name="9"></a></h2><p>using wavelet ?</p><pre class="codeinput">    wavelet_Levels = 6;         <span class="comment">% levels for wavelet</span>
+    wavelet_Type = <span class="string">'db3'</span>;
+    baseline_HR=80;
+
+    [c,l] = wavedec(Ecg_Data(:,2),wavelet_Levels, wavelet_Type);
+    trend = wrcoef(<span class="string">'a'</span>,c,l,wavelet_Type, wavelet_Levels);
+    Ecg_Data(:,2) = Ecg_Data(:,2) - trend;
+    Ecg_Data(:,2) = Ecg_Data(:,2) + baseline_HR;
+</pre><h2>process vehicle data<a name="10"></a></h2><pre class="codeinput">    Base_Time = datenum(OBD_start_Time) - floor(datenum(OBD_start_Time));
+    Veh_Data(:,1) = Veh_Data(:,1)/3600/24 + Base_Time;
+</pre><h2>startTime information extraction for synchronizing signals<a name="11"></a></h2><pre class="codeinput">    start_time = max([  datenum(OBD_start_Time)  - floor(datenum(OBD_start_Time));<span class="keyword">...</span>
+                       datenum(GSR_start_Time)  - floor(datenum(GSR_start_Time));<span class="keyword">...</span>
+                       datenum(ECG_start_Time)  - floor(datenum(ECG_start_Time));<span class="keyword">...</span>
+                       datenum(RSP_start_Time)  - floor(datenum(RSP_start_Time));<span class="keyword">...</span>
+                       datenum(ECG_RAW_start_Time)  - floor(datenum(ECG_RAW_start_Time));<span class="keyword">...</span>
+                       datenum(GSR_RAW_start_Time)  - floor(datenum(GSR_RAW_start_Time));<span class="keyword">...</span>
+                       datenum(BELT_RAW_start_Time)  - floor(datenum(BELT_RAW_start_Time));<span class="keyword">...</span>
+                     ]);
+    stop_time = min( [Ecg_Data(end,1), Gsr_Data(end,1), Rsp_Data(end,1), <span class="keyword">...</span>
+                    Veh_Data(end,1), ECG_RAW_Data(end,1), <span class="keyword">...</span>
+                    GSR_RAW_Data(end,1), BELT_RAW_Data(end,1)]);
+</pre><h2>synchronisation : This part is used to synchronize the data<a name="12"></a></h2><pre class="codeinput">    Sample_Rate = 10; <span class="comment">% 10 Hz</span>
+    time_step = (1/Sample_Rate) / 24 / 3600;
+    tlength = abs((stop_time-start_time)) * 24 * 3600;
+</pre><h2>Up-Sampling for multiple signals<a name="13"></a></h2><p>interpolation for Ecg data</p><pre class="codeinput">    [~, idx_1]    = min(abs(Ecg_Data(:,1) - start_time));
+    [~, idx_2]    = min(abs(Ecg_Data(:,1) - stop_time));
+
+    v   = Ecg_Data(idx_1:idx_2, [2,3]);
+    t   = ( Ecg_Data(idx_1:idx_2, 1) - Ecg_Data(idx_1, 1) ) * 24 * 3600;
+    tq  = 0:0.1:tlength;
+    tq  = tq';
+    vq_ecg = interp1(t, v, tq, <span class="string">'linear'</span>);       <span class="comment">% use linear interpolation</span>
+
+    <span class="comment">% interpolation for Gsr data</span>
+    [none_use_1, idx_1] = min(abs(Gsr_Data(:,1) - start_time));
+    [none_use_2, idx_2] = min(abs(Gsr_Data(:,1) - stop_time));
+
+    v   = Gsr_Data(idx_1:idx_2, 2:end);
+    t   = (Gsr_Data(idx_1:idx_2, 1) - Gsr_Data(idx_1, 1)) * 24 * 3600;
+    tq  = 0:0.1:tlength;
+    tq  = tq';
+    vq_gsr = interp1(t, v, tq, <span class="string">'linear'</span>);
+
+    <span class="comment">% interpolation for Rsp data</span>
+    [none_use_1, idx_1] = min(abs(Rsp_Data(:,1) - start_time));
+    [none_use_2, idx_2] = min(abs(Rsp_Data(:,1) - stop_time));
+
+    v = Rsp_Data(idx_1:idx_2, 2:end);
+    t = (Rsp_Data(idx_1:idx_2, 1) - Rsp_Data(idx_1, 1)) * 24 * 3600;
+    tq = 0:0.1:tlength;
+    tq = tq';
+    vq_rsp = interp1(t, v, tq, <span class="string">'linear'</span>);
+</pre><h2>Down-Sampling processing<a name="14"></a></h2><p>Only for Ecg Raw Data</p><pre class="codeinput">    [none_use_1,idx_1]  = min(abs(ECG_RAW_Data(:,1) - start_time));
+    vq_ecg_raw_time     = (ECG_RAW_Data(idx_1:end, 1) - ECG_RAW_Data(idx_1,1)) * 24 * 3600;
+    vq_ecg_raw          = ECG_RAW_Data(idx_1:end, 2:end);
+
+    <span class="comment">% Belt signal down-sampling</span>
+    [none_use_1,idx_1]=min(abs(BELT_RAW_Data(:,1) - start_time));
+    vq_belt_raw_time    = (BELT_RAW_Data(idx_1:end, 1) - BELT_RAW_Data(idx_1,1)) * 24 * 3600;
+    vq_belt_raw         = BELT_RAW_Data(idx_1:end, 2:end);
+
+    <span class="comment">% GSR_RAW signal down-sampling</span>
+    [none_use_1, idx_1] = min(abs(GSR_RAW_Data(:,1) - start_time));
+    [none_use_2, idx_2] = min(abs(GSR_RAW_Data(:,1) - stop_time));
+
+    v   = GSR_RAW_Data(idx_1:idx_2,3);
+    t   = (GSR_RAW_Data(idx_1:idx_2,1)-GSR_RAW_Data(idx_1,1))*24*3600;
+    tq  = 0:0.1:tlength;
+    tq  = tq';
+    vq_gsr_raw = interp1(t,v,tq,<span class="string">'linear'</span>);
+
+    <span class="keyword">if</span> isnan(vq_gsr_raw(end,1))
+        vq_gsr_raw(end,1)=vq_gsr_raw(end-1,1);
+    <span class="keyword">end</span>
+
+    data_All_cal    = [tq, vq_ecg, vq_rsp, vq_gsr, vq_gsr_raw];
+    data_All_ECG    = [vq_ecg_raw_time,    vq_ecg_raw];
+    data_All_BELT   = [vq_belt_raw_time,    vq_belt_raw];
+</pre><h2>doing with target<a name="15"></a></h2><pre class="codeinput">    target_idx=target_Data;
+
+    target_idx(:,1) = datenum(target_idx(:,1)) - floor(datenum(target_idx(:,1)));
+    target_idx(:,2) = datenum(target_idx(:,2)) - floor(datenum(target_idx(:,2)));
+    baseline        = datenum(OBD_start_Time) - floor(datenum(OBD_start_Time));
+    target_idx(:,1) = target_idx(:,1) + baseline;
+    target_idx(:,2) = target_idx(:,2) + baseline;
+
+    <span class="comment">% Retrive the number of Lane Change</span>
+    Lane_Change_event = length(find(target_idx(:,16)==1));  <span class="comment">% find how many lange changes in one vedio</span>
+    num_Lane_Change = num_Lane_Change + Lane_Change_event;
+    Target = zeros(size(data_All_cal(:,1)));
+
+    <span class="keyword">for</span> i=1:length(target_idx(:,1))
+        index = find((data_All_cal(:,1) &gt;= (target_idx(i,1) - start_time)*24*3600) <span class="keyword">...</span>
+                    &amp; (data_All_cal(:,1) &lt;= (target_idx(i,2) - start_time)*24*3600) <span class="keyword">...</span>
+                    &amp; target_idx(i,16) == 1);
+        Target(index) = 1;     <span class="comment">%%</span>
+
+        index = find((data_All_cal(:,1) &gt;= (target_idx(i,1)-start_time)*24*3600) <span class="keyword">...</span>
+                    &amp; (data_All_cal(:,1) &lt;= (target_idx(i,2)-start_time)*24*3600) <span class="keyword">...</span>
+                    &amp; target_idx(i,16) == 2);
+        Target(index) = 2;     <span class="comment">%%</span>
+    <span class="keyword">end</span>
+
+    data_All_cal = [data_All_cal, Target];
+    save(strcat(<span class="string">'./synchronization_3_Output/Vedio_'</span>,num2str(m),<span class="string">'_Synchronized_Data.mat'</span>),<span class="string">'data_All_cal'</span>,<span class="string">'Text_Index'</span>,<span class="string">'data_All_ECG'</span>,<span class="string">'data_All_BELT'</span>);
+</pre><pre class="codeinput"><span class="keyword">end</span>
+save(<span class="string">'./Dataset/statistics.mat'</span>, <span class="string">'num_Lane_Change'</span>);
+toc;    <span class="comment">% end of program</span>
+</pre><pre class="codeoutput">Elapsed time is 6.812359 seconds.
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Synchronization_3.m
+
+%% Description
+%  File type:       Procedure
+%
+%  Summary:
+%  Detrend processing
+
+%%
+%  Examples: 
+%Provide sample usage code here
+
+%%
+%  Algorithm:
+%df
+%dsf
+
+%%
+%  See also:
+% * ITEM1
+% * ITEM2
+
+%%
+%  Author:       Yuan Ma
+%  Date:         Oct.18.2014
+%  Revision:     0.1
+%  Partner:      Worked with Tianyu Wang, Yulong Li
+%  Copyright:    Intelligent System Laboratory
+%                University of Michigan Dearborn
+
+
+%%
+clc; clear all;
+num_Lane_Change = 0;
+vedio_signals = dir('./synchronization_1_Output/Vedio_*.mat');
+
+%% Processing
+tic;
+for m=1:size(vedio_signals,1)
+    load(strcat('./synchronization_1_Output/Vedio_' ,num2str(m), '_Before_Denoised_Data.mat'));
+    load(strcat('./synchronization_2_Output/Vedio_' ,num2str(m), '_After_Denoised_Data.mat'));
+    
+    Ecg_Data(:,2)=Ecg_Data_HR_New(:,2);
+    Ecg_Data(:,3)=Ecg_Data_RR_New(:,2);
+    [R,~]=find(isnan(Ecg_Data(:,2)));
+    Ecg_Data(R,:)=[];
+    [R,~]=find(isnan(Ecg_Data(:,3)));
+    Ecg_Data(R,:)=[];
+    
+    %% detrend for HR
+    % using wavelet ?
+    wavelet_Levels = 6;         % levels for wavelet
+    wavelet_Type = 'db3';
+    baseline_HR=80;
+
+    [c,l] = wavedec(Ecg_Data(:,2),wavelet_Levels, wavelet_Type);
+    trend = wrcoef('a',c,l,wavelet_Type, wavelet_Levels);
+    Ecg_Data(:,2) = Ecg_Data(:,2) - trend;
+    Ecg_Data(:,2) = Ecg_Data(:,2) + baseline_HR;
+
+    %% process vehicle data
+    Base_Time = datenum(OBD_start_Time) - floor(datenum(OBD_start_Time));
+    Veh_Data(:,1) = Veh_Data(:,1)/3600/24 + Base_Time;
+
+    %% startTime information extraction for synchronizing signals
+    start_time = max([  datenum(OBD_start_Time)  - floor(datenum(OBD_start_Time));...
+                       datenum(GSR_start_Time)  - floor(datenum(GSR_start_Time));...
+                       datenum(ECG_start_Time)  - floor(datenum(ECG_start_Time));...
+                       datenum(RSP_start_Time)  - floor(datenum(RSP_start_Time));...
+                       datenum(ECG_RAW_start_Time)  - floor(datenum(ECG_RAW_start_Time));...
+                       datenum(GSR_RAW_start_Time)  - floor(datenum(GSR_RAW_start_Time));...
+                       datenum(BELT_RAW_start_Time)  - floor(datenum(BELT_RAW_start_Time));...
+                     ]);
+    stop_time = min( [Ecg_Data(end,1), Gsr_Data(end,1), Rsp_Data(end,1), ...
+                    Veh_Data(end,1), ECG_RAW_Data(end,1), ...
+                    GSR_RAW_Data(end,1), BELT_RAW_Data(end,1)]);
+
+    %% synchronisation : This part is used to synchronize the data
+    Sample_Rate = 10; % 10 Hz
+    time_step = (1/Sample_Rate) / 24 / 3600;
+    tlength = abs((stop_time-start_time)) * 24 * 3600;  
+    
+    %% Up-Sampling for multiple signals
+    % interpolation for Ecg data
+    [~, idx_1]    = min(abs(Ecg_Data(:,1) - start_time)); 
+    [~, idx_2]    = min(abs(Ecg_Data(:,1) - stop_time));  
+    
+    v   = Ecg_Data(idx_1:idx_2, [2,3]);
+    t   = ( Ecg_Data(idx_1:idx_2, 1) - Ecg_Data(idx_1, 1) ) * 24 * 3600;
+    tq  = 0:0.1:tlength;
+    tq  = tq';
+    vq_ecg = interp1(t, v, tq, 'linear');       % use linear interpolation
+
+    % interpolation for Gsr data
+    [none_use_1, idx_1] = min(abs(Gsr_Data(:,1) - start_time)); 
+    [none_use_2, idx_2] = min(abs(Gsr_Data(:,1) - stop_time));  
+    
+    v   = Gsr_Data(idx_1:idx_2, 2:end);
+    t   = (Gsr_Data(idx_1:idx_2, 1) - Gsr_Data(idx_1, 1)) * 24 * 3600;
+    tq  = 0:0.1:tlength;
+    tq  = tq';
+    vq_gsr = interp1(t, v, tq, 'linear');
+
+    % interpolation for Rsp data
+    [none_use_1, idx_1] = min(abs(Rsp_Data(:,1) - start_time)); 
+    [none_use_2, idx_2] = min(abs(Rsp_Data(:,1) - stop_time));  
+    
+    v = Rsp_Data(idx_1:idx_2, 2:end);
+    t = (Rsp_Data(idx_1:idx_2, 1) - Rsp_Data(idx_1, 1)) * 24 * 3600;
+    tq = 0:0.1:tlength;
+    tq = tq';
+    vq_rsp = interp1(t, v, tq, 'linear');
+
+    %% Down-Sampling processing
+    % Only for Ecg Raw Data
+    [none_use_1,idx_1]  = min(abs(ECG_RAW_Data(:,1) - start_time));  
+    vq_ecg_raw_time     = (ECG_RAW_Data(idx_1:end, 1) - ECG_RAW_Data(idx_1,1)) * 24 * 3600;
+    vq_ecg_raw          = ECG_RAW_Data(idx_1:end, 2:end); 
+
+    % Belt signal down-sampling
+    [none_use_1,idx_1]=min(abs(BELT_RAW_Data(:,1) - start_time)); 
+    vq_belt_raw_time    = (BELT_RAW_Data(idx_1:end, 1) - BELT_RAW_Data(idx_1,1)) * 24 * 3600;
+    vq_belt_raw         = BELT_RAW_Data(idx_1:end, 2:end); 
+
+    % GSR_RAW signal down-sampling
+    [none_use_1, idx_1] = min(abs(GSR_RAW_Data(:,1) - start_time)); 
+    [none_use_2, idx_2] = min(abs(GSR_RAW_Data(:,1) - stop_time));  
+    
+    v   = GSR_RAW_Data(idx_1:idx_2,3);
+    t   = (GSR_RAW_Data(idx_1:idx_2,1)-GSR_RAW_Data(idx_1,1))*24*3600;
+    tq  = 0:0.1:tlength;
+    tq  = tq';
+    vq_gsr_raw = interp1(t,v,tq,'linear');
+    
+    if isnan(vq_gsr_raw(end,1))
+        vq_gsr_raw(end,1)=vq_gsr_raw(end-1,1);
+    end
+    
+    data_All_cal    = [tq, vq_ecg, vq_rsp, vq_gsr, vq_gsr_raw];
+    data_All_ECG    = [vq_ecg_raw_time,    vq_ecg_raw];
+    data_All_BELT   = [vq_belt_raw_time,    vq_belt_raw];
+
+    %% doing with target
+    target_idx=target_Data;
+
+    target_idx(:,1) = datenum(target_idx(:,1)) - floor(datenum(target_idx(:,1)));
+    target_idx(:,2) = datenum(target_idx(:,2)) - floor(datenum(target_idx(:,2)));
+    baseline        = datenum(OBD_start_Time) - floor(datenum(OBD_start_Time));
+    target_idx(:,1) = target_idx(:,1) + baseline;
+    target_idx(:,2) = target_idx(:,2) + baseline;
+    
+    % Retrive the number of Lane Change
+    Lane_Change_event = length(find(target_idx(:,16)==1));  % find how many lange changes in one vedio
+    num_Lane_Change = num_Lane_Change + Lane_Change_event;
+    Target = zeros(size(data_All_cal(:,1)));
+
+    for i=1:length(target_idx(:,1))
+        index = find((data_All_cal(:,1) >= (target_idx(i,1) - start_time)*24*3600) ...
+                    & (data_All_cal(:,1) <= (target_idx(i,2) - start_time)*24*3600) ...
+                    & target_idx(i,16) == 1);
+        Target(index) = 1;     %%
+        
+        index = find((data_All_cal(:,1) >= (target_idx(i,1)-start_time)*24*3600) ...
+                    & (data_All_cal(:,1) <= (target_idx(i,2)-start_time)*24*3600) ...
+                    & target_idx(i,16) == 2);
+        Target(index) = 2;     %%
+    end
+
+    data_All_cal = [data_All_cal, Target];
+    save(strcat('./synchronization_3_Output/Vedio_',num2str(m),'_Synchronized_Data.mat'),'data_All_cal','Text_Index','data_All_ECG','data_All_BELT');
+end
+save('./Dataset/statistics.mat', 'num_Lane_Change');
+toc;    % end of program
+##### SOURCE END #####
+--></body></html>
