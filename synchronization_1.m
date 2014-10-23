@@ -30,6 +30,7 @@
 %  Copyright:    Intelligent System Laboratory
 %                University of Michigan Dearborn
 
+
 %% Initialization and Configuration
 clear all; clc;     % Clear environment, and start counting running time
 ini = IniConfig();
@@ -241,7 +242,7 @@ for m = 1:num_folder
                             - floor(datenum(ACC_RAW_start_Time));
 
     % save ouput file, NAME FORMAT: 'Vedio_#_Before_denoised_data.mat'
-    save(strcat('./synchronization_1_Output/Vedio_' ,num2str(m), '_Before_denoised_Data'.mat'));
+    save(strcat('./synchronization_1_Output/Vedio_' ,num2str(m), '_Before_Denoised_Data.mat'));
     
     toc;    % PROGRAM EFFICIENCY ESTIMATE
 end         % end of program
