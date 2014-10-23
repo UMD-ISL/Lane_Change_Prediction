@@ -40,8 +40,8 @@ ini.ReadFile('configuration.ini');
 Data_Path = ini.GetValues('Path Setting', 'DATA_PATH');
 fd_list = dir(Data_Path);
 num_folder = 0;
-tic;                            % PROGRAM EFFICIENCY ESTIMATE
 
+tic;                            % PROGRAM EFFICIENCY ESTIMATE
 for i = 1:size(fd_list,1)
     stuct = fd_list(i,1);
     if (stuct.isdir == 1)
@@ -246,7 +246,6 @@ for m = 1:num_folder
     
     toc;    % PROGRAM EFFICIENCY ESTIMATE
 end         % end of program
-
 clear all;
 
 

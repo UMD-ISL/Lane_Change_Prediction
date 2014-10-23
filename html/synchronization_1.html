@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Synchronization_1.m</title><meta name="generator" content="MATLAB 8.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-17"><meta name="DC.source" content="synchronization_1.m"><style type="text/css">
+      --><title>Synchronization_1.m</title><meta name="generator" content="MATLAB 8.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-23"><meta name="DC.source" content="synchronization_1.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -23,7 +23,7 @@ a:visited { color:#004aa0; text-decoration:none; }
 
 p { padding:0px; margin:0px 0px 20px; }
 img { padding:0px; margin:0px 0px 20px; border:none; }
-p img, pre img, tt img, li img { margin-bottom:0px; } 
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
 
 ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
 ul li { padding:0px; margin:0px 0px 7px 0px; }
@@ -38,11 +38,12 @@ ol li ul li { list-style:square; }
 
 .content { font-size:1.2em; line-height:140%; padding: 20px; }
 
-pre, tt, code { font-size:12px; }
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
 pre { margin:0px 0px 20px; }
-pre.error { color:red; }
 pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
 pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
 
 @media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
 
@@ -78,10 +79,9 @@ Date:         Oct.18.2014
 Revision:     0.1
 Partner:      Worked with Tianyu Wang, Yulong Li
 Copyright:    Intelligent System Laboratory
-              University of Michigan Dearborn</pre><h2>Initialization and Configuration<a name="6"></a></h2><pre class="codeinput">clear <span class="string">all</span>; clc;          <span class="comment">% Clear environment, and start counting running time</span>
+              University of Michigan Dearborn</pre><h2>Initialization and Configuration<a name="6"></a></h2><pre class="codeinput">clear <span class="string">all</span>; clc;     <span class="comment">% Clear environment, and start counting running time</span>
 ini = IniConfig();
 ini.ReadFile(<span class="string">'configuration.ini'</span>);
-<span class="comment">%# warning off;</span>
 
 <span class="comment">%Data_directory = '../Lane_Change_original_data/';</span>
 Data_Path = ini.GetValues(<span class="string">'Path Setting'</span>, <span class="string">'DATA_PATH'</span>);
@@ -163,9 +163,6 @@ num_folder = num_folder - 2;    <span class="comment">% ignore './' and '../'</s
     <span class="comment">% save the mat raw data</span>
     [target_Data, target_Txt, ~] = xlsread(strcat(Data_Path, num2str(m), <span class="string">'/target.xls'</span>));
     target_Idx = target_Data;
-    <span class="comment">% save the mat raw data</span>
-    <span class="comment">%save('RawDataAll');</span>
-    <span class="comment">% save the num data</span>
 
     <span class="comment">% TextIndex is a structure store the name of all signals, first column is</span>
     <span class="comment">% time</span>
@@ -198,7 +195,7 @@ num_folder = num_folder - 2;    <span class="comment">% ignore './' and '../'</s
     Text_Index{k,1} = target_Txt{1,16};
     k = k+1;
 
-    <span class="comment">% Save processed data</span>
+    <span class="comment">% Save the intermedia process result, NAME FORMAT is following below</span>
     save(<span class="string">'./Synchronization_1_Output/Synchronization_1_Output_Data_Phase_I'</span>, <span class="keyword">...</span>
         <span class="string">'Rsp_Data'</span>,<span class="string">'Gsr_Data'</span>,<span class="string">'Ecg_Data'</span>,<span class="string">'Veh_Data'</span>,<span class="string">'Text_Index'</span>, <span class="keyword">...</span>
         <span class="string">'GSR_RAW_Data'</span>,<span class="string">'ECG_RAW_Data'</span>,<span class="string">'BELT_RAW_Data'</span>,<span class="string">'ACC_RAW_Data'</span>, <span class="keyword">...</span>
@@ -206,12 +203,13 @@ num_folder = num_folder - 2;    <span class="comment">% ignore './' and '../'</s
     toc;
 </pre><h2>Processing each Signal data (Phase II)<a name="8"></a></h2><p>eliminate the nan value in the data</p><pre class="codeinput">    clearvars <span class="string">-except</span> <span class="string">Data_Path</span>;             <span class="comment">% Clear all varibles but keep Data_Path</span>
 
-    load(<span class="string">'./synchronization_1_Output/Synchronization_1_Output_Data_Phase_I.mat'</span>) <span class="comment">% load previous data</span>
+    <span class="comment">% load the data generated in Phase I</span>
+    load(<span class="string">'./synchronization_1_Output/Synchronization_1_Output_Data_Phase_I.mat'</span>)
+
     disp(<span class="string">'Enter Signal Processing Phase II'</span>);       <span class="comment">% DEBUG MESSAGE</span>
     tic;                                            <span class="comment">% PROGRAM EFFICIENCY ESTIMATE</span>
 
-    <span class="comment">% Pre-process each signal</span>
-    <span class="comment">% Pre-process ECG signal</span>
+    <span class="comment">% Pre-process each signal: ECG signal</span>
     Ecg_Data(:,4:5) = [];
     [R,~] = find(isnan(Ecg_Data));          <span class="comment">% find the NAN value position</span>
     Ecg_Data(R,:) = [];
@@ -247,41 +245,51 @@ num_folder = num_folder - 2;    <span class="comment">% ignore './' and '../'</s
     <span class="comment">% Time shifting process</span>
     load(strcat(Data_Path, <span class="string">'Start_time_reference.mat'</span>));
 
-    GSR_start_Time      = Start_time_reference{1,m};      <span class="comment">% 18_15:15:17.000    20_15:29:15.000     21_18:17:46.000     25_14:34:37.000  04_10_22:52:00.000     06_17_17:24:18.000   06_16_22:41:22.000</span>
-    ECG_start_Time      = Start_time_reference{2,m};      <span class="comment">% 18_15:15:20.716    20_15:29:19.257     21_18:17:50.358     25_14:34:42.053  04_10_22:52:06:179     06_17_17:24:18.000   06_16_22:41:33.477</span>
-    RSP_start_Time      = Start_time_reference{3,m};      <span class="comment">% 18_15:15:30.203    20_15:29:30.703     21_18:18:04.593     25_14:34:37.546  04_10_22:52:14:492     06_17_17:24:27.375   06_16_22:41:35.476</span>
-    OBD_start_Time      = Start_time_reference{4,m};      <span class="comment">% 18_15:25:09        20_15:30:28         21_18:21:15         25_14:35:32      04_10_22:52:02         06_17_17:24:45       06_16_22:39:00</span>
-    ECG_RAW_start_Time  = Start_time_reference{5,m};      <span class="comment">% 18_15:15:17.000    20_15:29:15.004     21_18:17:46.004     25_14:34:37.004  04_10_22:52:00.004     06_17_17:24:18.004   06_16_22:41:22.004</span>
-    GSR_RAW_start_Time  = Start_time_reference{6,m};      <span class="comment">% 18_15:15:17.352    20_15:29:15.547     21_18:17:46.547     25_14:34:37.508  04_10_22:52:00.469     06_17_17:24:18.586   06_16_22:41:22.039</span>
-    BELT_RAW_start_Time = Start_time_reference{7,m};      <span class="comment">% 18_15:15:17.039    20_15:29:15.039     21_18:17:46.039     25_14:34:37.039  04_10_22:52:00.039     06_17_17:24:18.039   06_16_22:41:22.039</span>
-    ACC_RAW_start_Time  = Start_time_reference{8,m};      <span class="comment">% 18_15:15:17.039    20_15:29:15.039     21_18:17:46.039     25_14:34:37.039  04_10_22:52:00.039     06_17_17:24:18.039   06_16_22:41:22.039</span>
+    GSR_start_Time      = Start_time_reference{1,m};
+    ECG_start_Time      = Start_time_reference{2,m};
+    RSP_start_Time      = Start_time_reference{3,m};
+    OBD_start_Time      = Start_time_reference{4,m};
+    ECG_RAW_start_Time  = Start_time_reference{5,m};
+    GSR_RAW_start_Time  = Start_time_reference{6,m};
+    BELT_RAW_start_Time = Start_time_reference{7,m};
+    ACC_RAW_start_Time  = Start_time_reference{8,m};
 
     Rsp_Data(:,1)       = Rsp_Data(1:end,1) - Rsp_Data(1,1);
-    Rsp_Data(:,1)       = Rsp_Data(:,1) + datenum(RSP_start_Time) - floor(datenum(RSP_start_Time));
+    Rsp_Data(:,1)       = Rsp_Data(:,1) + datenum(RSP_start_Time) <span class="keyword">...</span>
+                            - floor(datenum(RSP_start_Time));
 
     Gsr_Data(:,1)       = Gsr_Data(1:end,1) - Gsr_Data(1,1);
-    Gsr_Data(:,1)       = Gsr_Data(:,1) + datenum(GSR_start_Time) - floor(datenum(GSR_start_Time));
+    Gsr_Data(:,1)       = Gsr_Data(:,1) + datenum(GSR_start_Time) <span class="keyword">...</span>
+                            - floor(datenum(GSR_start_Time));
 
     Ecg_Data(:,1)       = Ecg_Data(1:end,1) - Ecg_Data(1,1);
-    Ecg_Data(:,1)       = Ecg_Data(:,1) + datenum(ECG_start_Time) - floor(datenum(ECG_start_Time));
+    Ecg_Data(:,1)       = Ecg_Data(:,1) + datenum(ECG_start_Time) <span class="keyword">...</span>
+                            - floor(datenum(ECG_start_Time));
 
     ECG_RAW_Data(:,1)   = ECG_RAW_Data(1:end,1) - ECG_RAW_Data(1,1);
-    ECG_RAW_Data(:,1)   = ECG_RAW_Data(:,1) + datenum(ECG_RAW_start_Time) - floor(datenum(ECG_RAW_start_Time));
+    ECG_RAW_Data(:,1)   = ECG_RAW_Data(:,1) + datenum(ECG_RAW_start_Time) <span class="keyword">...</span>
+                            - floor(datenum(ECG_RAW_start_Time));
 
     GSR_RAW_Data(:,1)   = GSR_RAW_Data(1:end,1) - GSR_RAW_Data(1,1);
-    GSR_RAW_Data(:,1)   = GSR_RAW_Data(:,1) + datenum(GSR_RAW_start_Time) - floor(datenum(GSR_RAW_start_Time));
+    GSR_RAW_Data(:,1)   = GSR_RAW_Data(:,1) + datenum(GSR_RAW_start_Time) <span class="keyword">...</span>
+                            - floor(datenum(GSR_RAW_start_Time));
 
     BELT_RAW_Data(:,1)  = BELT_RAW_Data(1:end,1) - BELT_RAW_Data(1,1);
-    BELT_RAW_Data(:,1)  = BELT_RAW_Data(:,1) + datenum(BELT_RAW_start_Time) - floor(datenum(BELT_RAW_start_Time));
+    BELT_RAW_Data(:,1)  = BELT_RAW_Data(:,1) + datenum(BELT_RAW_start_Time) <span class="keyword">...</span>
+                            - floor(datenum(BELT_RAW_start_Time));
 
     ACC_RAW_Data(:,1)   = ACC_RAW_Data(1:end,1) - ACC_RAW_Data(1,1);
-    ACC_RAW_Data(:,1)   = ACC_RAW_Data(:,1) + datenum(ACC_RAW_start_Time) - floor(datenum(ACC_RAW_start_Time));
+    ACC_RAW_Data(:,1)   = ACC_RAW_Data(:,1) + datenum(ACC_RAW_start_Time) <span class="keyword">...</span>
+                            - floor(datenum(ACC_RAW_start_Time));
 
-    save(strcat(<span class="string">'./synchronization_1_Output/Before_denoise_'</span>,num2str(m),<span class="string">'.mat'</span>));
+    <span class="comment">% save ouput file, NAME FORMAT: 'Vedio_#_Before_denoised_data.mat'</span>
+    save(strcat(<span class="string">'./synchronization_1_Output/Vedio_'</span> ,num2str(m), <span class="string">'_Before_Denoised_Data.mat'</span>));
 
     toc;    <span class="comment">% PROGRAM EFFICIENCY ESTIMATE</span>
 </pre><pre class="codeinput"><span class="keyword">end</span>         <span class="comment">% end of program</span>
-</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013a</a><br></p></div><!--
+
+clear <span class="string">all</span>;
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Synchronization_1.m
 
@@ -315,11 +323,11 @@ num_folder = num_folder - 2;    <span class="comment">% ignore './' and '../'</s
 %  Copyright:    Intelligent System Laboratory
 %                University of Michigan Dearborn
 
+
 %% Initialization and Configuration
-clear all; clc;          % Clear environment, and start counting running time
+clear all; clc;     % Clear environment, and start counting running time
 ini = IniConfig();
 ini.ReadFile('configuration.ini');
-%# warning off;
 
 %Data_directory = '../Lane_Change_original_data/';
 Data_Path = ini.GetValues('Path Setting', 'DATA_PATH');
@@ -403,9 +411,6 @@ for m = 1:num_folder
     % save the mat raw data
     [target_Data, target_Txt, ~] = xlsread(strcat(Data_Path, num2str(m), '/target.xls'));      
     target_Idx = target_Data;
-    % save the mat raw data
-    %save('RawDataAll');
-    % save the num data
 
     % TextIndex is a structure store the name of all signals, first column is
     % time
@@ -438,7 +443,7 @@ for m = 1:num_folder
     Text_Index{k,1} = target_Txt{1,16};
     k = k+1;
 
-    % Save processed data
+    % Save the intermedia process result, NAME FORMAT is following below
     save('./Synchronization_1_Output/Synchronization_1_Output_Data_Phase_I', ...
         'Rsp_Data','Gsr_Data','Ecg_Data','Veh_Data','Text_Index', ...
         'GSR_RAW_Data','ECG_RAW_Data','BELT_RAW_Data','ACC_RAW_Data', ...
@@ -449,13 +454,14 @@ for m = 1:num_folder
     % eliminate the nan value in the data
     
     clearvars -except Data_Path;             % Clear all varibles but keep Data_Path
-
-    load('./synchronization_1_Output/Synchronization_1_Output_Data_Phase_I.mat') % load previous data
+    
+    % load the data generated in Phase I
+    load('./synchronization_1_Output/Synchronization_1_Output_Data_Phase_I.mat')
+    
     disp('Enter Signal Processing Phase II');       % DEBUG MESSAGE
     tic;                                            % PROGRAM EFFICIENCY ESTIMATE
     
-    % Pre-process each signal
-    % Pre-process ECG signal
+    % Pre-process each signal: ECG signal
     Ecg_Data(:,4:5) = [];
     [R,~] = find(isnan(Ecg_Data));          % find the NAN value position
     Ecg_Data(R,:) = [];
@@ -491,40 +497,50 @@ for m = 1:num_folder
     % Time shifting process
     load(strcat(Data_Path, 'Start_time_reference.mat'));
 
-    GSR_start_Time      = Start_time_reference{1,m};      % 18_15:15:17.000    20_15:29:15.000     21_18:17:46.000     25_14:34:37.000  04_10_22:52:00.000     06_17_17:24:18.000   06_16_22:41:22.000
-    ECG_start_Time      = Start_time_reference{2,m};      % 18_15:15:20.716    20_15:29:19.257     21_18:17:50.358     25_14:34:42.053  04_10_22:52:06:179     06_17_17:24:18.000   06_16_22:41:33.477
-    RSP_start_Time      = Start_time_reference{3,m};      % 18_15:15:30.203    20_15:29:30.703     21_18:18:04.593     25_14:34:37.546  04_10_22:52:14:492     06_17_17:24:27.375   06_16_22:41:35.476
-    OBD_start_Time      = Start_time_reference{4,m};      % 18_15:25:09        20_15:30:28         21_18:21:15         25_14:35:32      04_10_22:52:02         06_17_17:24:45       06_16_22:39:00
-    ECG_RAW_start_Time  = Start_time_reference{5,m};      % 18_15:15:17.000    20_15:29:15.004     21_18:17:46.004     25_14:34:37.004  04_10_22:52:00.004     06_17_17:24:18.004   06_16_22:41:22.004
-    GSR_RAW_start_Time  = Start_time_reference{6,m};      % 18_15:15:17.352    20_15:29:15.547     21_18:17:46.547     25_14:34:37.508  04_10_22:52:00.469     06_17_17:24:18.586   06_16_22:41:22.039
-    BELT_RAW_start_Time = Start_time_reference{7,m};      % 18_15:15:17.039    20_15:29:15.039     21_18:17:46.039     25_14:34:37.039  04_10_22:52:00.039     06_17_17:24:18.039   06_16_22:41:22.039
-    ACC_RAW_start_Time  = Start_time_reference{8,m};      % 18_15:15:17.039    20_15:29:15.039     21_18:17:46.039     25_14:34:37.039  04_10_22:52:00.039     06_17_17:24:18.039   06_16_22:41:22.039
+    GSR_start_Time      = Start_time_reference{1,m};
+    ECG_start_Time      = Start_time_reference{2,m};
+    RSP_start_Time      = Start_time_reference{3,m};
+    OBD_start_Time      = Start_time_reference{4,m};
+    ECG_RAW_start_Time  = Start_time_reference{5,m};
+    GSR_RAW_start_Time  = Start_time_reference{6,m};
+    BELT_RAW_start_Time = Start_time_reference{7,m};
+    ACC_RAW_start_Time  = Start_time_reference{8,m};
 
     Rsp_Data(:,1)       = Rsp_Data(1:end,1) - Rsp_Data(1,1);
-    Rsp_Data(:,1)       = Rsp_Data(:,1) + datenum(RSP_start_Time) - floor(datenum(RSP_start_Time));
+    Rsp_Data(:,1)       = Rsp_Data(:,1) + datenum(RSP_start_Time) ...
+                            - floor(datenum(RSP_start_Time));
 
     Gsr_Data(:,1)       = Gsr_Data(1:end,1) - Gsr_Data(1,1);
-    Gsr_Data(:,1)       = Gsr_Data(:,1) + datenum(GSR_start_Time) - floor(datenum(GSR_start_Time));
+    Gsr_Data(:,1)       = Gsr_Data(:,1) + datenum(GSR_start_Time) ...
+                            - floor(datenum(GSR_start_Time));
 
     Ecg_Data(:,1)       = Ecg_Data(1:end,1) - Ecg_Data(1,1);
-    Ecg_Data(:,1)       = Ecg_Data(:,1) + datenum(ECG_start_Time) - floor(datenum(ECG_start_Time));
+    Ecg_Data(:,1)       = Ecg_Data(:,1) + datenum(ECG_start_Time) ...
+                            - floor(datenum(ECG_start_Time));
 
     ECG_RAW_Data(:,1)   = ECG_RAW_Data(1:end,1) - ECG_RAW_Data(1,1);
-    ECG_RAW_Data(:,1)   = ECG_RAW_Data(:,1) + datenum(ECG_RAW_start_Time) - floor(datenum(ECG_RAW_start_Time));
+    ECG_RAW_Data(:,1)   = ECG_RAW_Data(:,1) + datenum(ECG_RAW_start_Time) ...
+                            - floor(datenum(ECG_RAW_start_Time));
 
     GSR_RAW_Data(:,1)   = GSR_RAW_Data(1:end,1) - GSR_RAW_Data(1,1);
-    GSR_RAW_Data(:,1)   = GSR_RAW_Data(:,1) + datenum(GSR_RAW_start_Time) - floor(datenum(GSR_RAW_start_Time));
+    GSR_RAW_Data(:,1)   = GSR_RAW_Data(:,1) + datenum(GSR_RAW_start_Time) ...
+                            - floor(datenum(GSR_RAW_start_Time));
 
     BELT_RAW_Data(:,1)  = BELT_RAW_Data(1:end,1) - BELT_RAW_Data(1,1);
-    BELT_RAW_Data(:,1)  = BELT_RAW_Data(:,1) + datenum(BELT_RAW_start_Time) - floor(datenum(BELT_RAW_start_Time));
+    BELT_RAW_Data(:,1)  = BELT_RAW_Data(:,1) + datenum(BELT_RAW_start_Time) ...
+                            - floor(datenum(BELT_RAW_start_Time));
 
     ACC_RAW_Data(:,1)   = ACC_RAW_Data(1:end,1) - ACC_RAW_Data(1,1);
-    ACC_RAW_Data(:,1)   = ACC_RAW_Data(:,1) + datenum(ACC_RAW_start_Time) - floor(datenum(ACC_RAW_start_Time));
+    ACC_RAW_Data(:,1)   = ACC_RAW_Data(:,1) + datenum(ACC_RAW_start_Time) ...
+                            - floor(datenum(ACC_RAW_start_Time));
 
-    save(strcat('./synchronization_1_Output/Before_denoise_',num2str(m),'.mat'));
+    % save ouput file, NAME FORMAT: 'Vedio_#_Before_denoised_data.mat'
+    save(strcat('./synchronization_1_Output/Vedio_' ,num2str(m), '_Before_Denoised_Data.mat'));
     
     toc;    % PROGRAM EFFICIENCY ESTIMATE
 end         % end of program
+
+clear all;
 
 
 
