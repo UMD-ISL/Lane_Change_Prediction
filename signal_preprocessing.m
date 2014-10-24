@@ -30,12 +30,12 @@
 %  Copyright:    Intelligent System Laboratory
 %               University of Michigan Dearborn
 
-clc; clear all;
+clc; clear all; close all;
 
 vedio_signals = dir('./synchronization_1_Output/*_Before_Denoised_Data.mat');      % list all the .mat files
 [num_trips, ~] = size(vedio_signals);        % find how many trips here
 load('./Synchronized_Dataset/vedio_1_Synchronized_Data.mat');
-[~, lane_change_labels] = size(data_All_cal);
+[~, num_data_columns] = size(data_All_cal);
 
 % modify some information of previous generated synchronized data
 for i=1:num_trips
@@ -44,5 +44,5 @@ for i=1:num_trips
     save(strcat('./Synchronized_Dataset/vedio_', num2str(i), '_Synchronized_Data.mat'), 'Text_Index', 'data_All_cal', 'data_All_ECG', 'data_All_BELT');
 end
 
-signal_selection(num_trips, lane_change_labels);
+signal_selection(num_trips, num_data_columns);
 
