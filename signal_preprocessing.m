@@ -44,5 +44,6 @@ for i=1:num_trips
     save(strcat('./Synchronized_Dataset/vedio_', num2str(i), '_Synchronized_Data.mat'), 'Text_Index', 'data_All_cal', 'data_All_ECG', 'data_All_BELT');
 end
 
-signal_selection(num_trips, num_data_columns);
-
+load('Synchronized_DataSet/statistics.mat');
+[num_selected_signal] = signal_selection(num_trips, num_data_columns);
+save('Synchronized_DataSet/statistics.mat','num_selected_signal','num_lane_change','num_trips');

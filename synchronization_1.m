@@ -37,6 +37,7 @@ ini = IniConfig();
 ini.ReadFile('configuration.ini');
 
 Data_Path = ini.GetValues('Path Setting', 'DATA_PATH');
+home = ini.GetValues('Path Setting', 'HOME_PATH');
 fd_list = dir(Data_Path);
 num_folder = 0;
 
@@ -49,13 +50,16 @@ for i = 1:size(fd_list,1)
 end
 num_folder = num_folder - 2;    % ignore './' and '../'
 
+synchronization_1_Output = strcat(home, '/synchronization_1_Output');
+    mkdir_if_not_exist(synchronization_1_Output);
+    
 for m = 1:num_folder
     %% Processing each Signal data (Phase I)
     % search the data folder and list all the folders and ignore files.
     disp('Enter Signal Processing Phase I');        % DEBUG MESSAGE
     
     % Process RSP Data
-    [Rsp_Data,Rsp_Txt,~] = xlsread(strcat(Data_Path, num2str(m), ...
+    [Rsp_Data,Rsp_Txt,~] = xlsread(strcat(Data_Path, '/', num2str(m), ...
         '/RSP.xlsx'));
     if (Rsp_Data(1,1) > 0.5) && (Rsp_Data(end,1) < 0.5)
         Reverse = find(Rsp_Data(:,1) < 0.5);
@@ -63,7 +67,7 @@ for m = 1:num_folder
     end
 
     % Process GSR Data
-    [Gsr_Data,Gsr_Txt,~] = xlsread(strcat(Data_Path, num2str(m), ...
+    [Gsr_Data,Gsr_Txt,~] = xlsread(strcat(Data_Path, '/', num2str(m), ...
         '/GSR.xlsx'));
     if (Gsr_Data(1,1) > 0.5) && (Gsr_Data(end,1) < 0.5)
         Reverse = find(Gsr_Data(:,1) < 0.5);
@@ -71,7 +75,7 @@ for m = 1:num_folder
     end
 
     % Process ECG Data
-    [Ecg_Data,Ecg_Txt,~] = xlsread(strcat(Data_Path, num2str(m), ...
+    [Ecg_Data,Ecg_Txt,~] = xlsread(strcat(Data_Path, '/', num2str(m), ...
         '/HR.xlsx'));
     if (Ecg_Data(1,1) > 0.5) && (Ecg_Data(end,1) < 0.5)
         Reverse = find(Ecg_Data(:,1) < 0.5);
@@ -79,11 +83,11 @@ for m = 1:num_folder
     end
 
     % PROCESS OBD DATA ? not used ?
-    [Veh_Data,Veh_Txt,~] = xlsread(strcat(Data_Path, num2str(m), ...
+    [Veh_Data,Veh_Txt,~] = xlsread(strcat(Data_Path, '/', num2str(m), ...
         '/OBD.xlsx'));
 
     % PROCESS GSR_RAW DATA
-    [GSR_RAW_Data,GSR_RAW_Txt] = xlsread(strcat(Data_Path, num2str(m), ...
+    [GSR_RAW_Data,GSR_RAW_Txt] = xlsread(strcat(Data_Path, '/', num2str(m), ...
         '/GSR_RAW.xlsx'));
     if (GSR_RAW_Data(1,1) > 0.5) && (GSR_RAW_Data(end,1) < 0.5)
         Reverse = find(GSR_RAW_Data(:,1)<0.5);
@@ -91,7 +95,7 @@ for m = 1:num_folder
     end
 
     % PROCESS ECG_RAW DATA
-    [ECG_RAW_Data,ECG_RAW_Txt] = xlsread(strcat(Data_Path, num2str(m), ...
+    [ECG_RAW_Data,ECG_RAW_Txt] = xlsread(strcat(Data_Path, '/', num2str(m), ...
         '/ECG_RAW.xlsx'));
     if (ECG_RAW_Data(1,1) > 0.5) && (ECG_RAW_Data(end,1) < 0.5)
         Reverse = find(ECG_RAW_Data(:,1)<0.5);
@@ -99,7 +103,7 @@ for m = 1:num_folder
     end
 
     % PROCESS BELT DATA
-    [BELT_RAW_Data,BELT_RAW_Txt] = xlsread(strcat(Data_Path, num2str(m), ...
+    [BELT_RAW_Data,BELT_RAW_Txt] = xlsread(strcat(Data_Path, '/', num2str(m), ...
         '/Belt.xlsx'));
     if (BELT_RAW_Data(1,1) > 0.5) && (BELT_RAW_Data(end,1) < 0.5)
         Reverse = find(BELT_RAW_Data(:,1) < 0.5);
@@ -107,7 +111,7 @@ for m = 1:num_folder
     end
 
     % PROCESS ACC DATA
-    [ACC_RAW_Data,ACC_RAW_Txt] = xlsread(strcat(Data_Path, num2str(m), ...
+    [ACC_RAW_Data,ACC_RAW_Txt] = xlsread(strcat(Data_Path, '/', num2str(m), ...
         '/Acc.xlsx'));
     if (ACC_RAW_Data(1,1) > 0.5) && (ACC_RAW_Data(end,1) < 0.5)
         Reverse = find(ACC_RAW_Data(:,1)<0.5);
@@ -115,7 +119,7 @@ for m = 1:num_folder
     end
 
     % save the mat raw data
-    [target_Data, target_Txt, ~] = xlsread(strcat(Data_Path, num2str(m), '/target.xls'));      
+    [target_Data, target_Txt, ~] = xlsread(strcat(Data_Path, '/', num2str(m), '/target.xls'));      
     target_Idx = target_Data;
 
     % TextIndex is a structure store the name of all signals, first column is
@@ -150,7 +154,8 @@ for m = 1:num_folder
     k = k+1;
 
     % Save the intermedia process result, NAME FORMAT is following below
-    save('./Synchronization_1_Output/Synchronization_1_Output_Data_Phase_I', ...
+    temp_file = strcat(synchronization_1_Output, '/Vedio_', num2str(m), '_temp_Data.mat');
+    save(temp_file, ...   % save temp data
         'Rsp_Data','Gsr_Data','Ecg_Data','Veh_Data','Text_Index', ...
         'GSR_RAW_Data','ECG_RAW_Data','BELT_RAW_Data','ACC_RAW_Data', ...
         'target_Data','m');
@@ -159,10 +164,12 @@ for m = 1:num_folder
     %% Processing each Signal data (Phase II)
     % eliminate the nan value in the data
     
-    clearvars -except Data_Path;             % Clear all varibles but keep Data_Path
+    % Clear all varibles but keep 'Data_Path' and 'synchronization_1_Output'
+    clearvars -except Data_Path synchronization_1_Output temp_file;             
     
     % load the data generated in Phase I
-    load('./synchronization_1_Output/Synchronization_1_Output_Data_Phase_I.mat')
+    load(temp_file);   % load temp data
+    delete(temp_file); % delete temp data
     
     disp('Enter Signal Processing Phase II');       % DEBUG MESSAGE
     tic;                                            % PROGRAM EFFICIENCY ESTIMATE
@@ -171,10 +178,6 @@ for m = 1:num_folder
     Ecg_Data(:,4:5) = [];
     [R,~] = find(isnan(Ecg_Data));          % find the NAN value position
     Ecg_Data(R,:) = [];
-    % if EcgData(1,1)>0.5 && EcgData(end,1)<0.5
-    %     Reverse=find(EcgData(:,1)<0.5);
-    %     EcgData(Reverse,1)=EcgData(Reverse,1)+1;
-    % end
 
     % Pre-process GSR signal
     [R,~] = find(isnan(Gsr_Data));          % find the NAN value position
@@ -201,7 +204,7 @@ for m = 1:num_folder
     ACC_RAW_Data(R,:)=[];
 
     % Time shifting process
-    load(strcat(Data_Path, 'Start_time_reference.mat'));
+    load(strcat(Data_Path, '/', 'Start_time_reference.mat'));
 
     GSR_start_Time      = Start_time_reference{1,m};
     ECG_start_Time      = Start_time_reference{2,m};
@@ -241,7 +244,7 @@ for m = 1:num_folder
                             - floor(datenum(ACC_RAW_start_Time));
 
     % save ouput file, NAME FORMAT: 'Vedio_#_Before_denoised_data.mat'
-    save(strcat('./synchronization_1_Output/Vedio_' ,num2str(m), '_Before_Denoised_Data.mat'));
+    save(strcat(synchronization_1_Output, '/Vedio_', num2str(m), '_Before_Denoised_Data.mat'));
     
     toc;    % PROGRAM EFFICIENCY ESTIMATE
 end         % end of program

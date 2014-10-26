@@ -31,15 +31,25 @@
 
 %%
 clc; clear all;
-num_Lane_Change = 0;
-vedio_signals = dir('./synchronization_1_Output/Vedio_*.mat');
+num_lane_change = 0;
+
+ini = IniConfig();
+ini.ReadFile('configuration.ini');
+
+Data_Path = ini.GetValues('Path Setting', 'DATA_PATH');
+home = ini.GetValues('Path Setting', 'HOME_PATH');
+
+synchronization_3_Output = strcat(home, '/synchronization_3_Output');
+    mkdir_if_not_exist(synchronization_3_Output);
+    
+vedio_signals = dir(strcat(home, '/synchronization_1_Output/Vedio_*.mat'));
 
 %% Processing
 tic;
 for m=1:size(vedio_signals,1)
     % load data generated from phase I and II of synchronization
-    load(strcat('./synchronization_1_Output/Vedio_' ,num2str(m), '_Before_Denoised_Data.mat'));
-    load(strcat('./synchronization_2_Output/Vedio_' ,num2str(m), '_After_Denoised_Data.mat'));
+    load(strcat(home, '/synchronization_1_Output/Vedio_' ,num2str(m), '_Before_Denoised_Data.mat'));
+    load(strcat(home, '/synchronization_2_Output/Vedio_' ,num2str(m), '_After_Denoised_Data.mat'));
     
     Ecg_Data(:,2)=Ecg_Data_HR_New(:,2); % combine HR and RR singal together into Ecg signal
     Ecg_Data(:,3)=Ecg_Data_RR_New(:,2);
@@ -147,7 +157,7 @@ for m=1:size(vedio_signals,1)
     
     % Retrive the number of Lane Change
     Lane_Change_event = length(find(target_idx(:,16)==1));  % find how many lange changes in one vedio
-    num_Lane_Change = num_Lane_Change + Lane_Change_event;
+    num_lane_change = num_lane_change + Lane_Change_event;
     Target = zeros(size(data_All_cal(:,1)));
 
     for i=1:length(target_idx(:,1))
@@ -163,9 +173,9 @@ for m=1:size(vedio_signals,1)
     end
 
     data_All_cal = [data_All_cal, Target];
-    save(strcat('./synchronization_3_Output/Vedio_',num2str(m),'_Synchronized_Data.mat'),'data_All_cal','Text_Index','data_All_ECG','data_All_BELT');
+    save(strcat(synchronization_3_Output, '/Vedio_',num2str(m),'_Synchronized_Data.mat'),'data_All_cal','Text_Index','data_All_ECG','data_All_BELT');
 end
-save('./synchronization_3_Output/statistics.mat', 'num_Lane_Change');
+save(strcat(synchronization_3_Output, '/statistics.mat'), 'num_lane_change');
 toc;    % end of program
 
-copyfile('./synchronization_3_Output', './Synchronized_Dataset');
+copyfile(synchronization_3_Output, strcat(home, '/Synchronized_Dataset'));
