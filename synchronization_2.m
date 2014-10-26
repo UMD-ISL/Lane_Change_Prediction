@@ -33,12 +33,21 @@
 
 %% Initialization and Configuration
 clc; clear all;
-% warning off;
-vedio_signals = dir('./synchronization_1_Output/*_Before_Denoised_Data.mat');      % list all the .mat files
+ini = IniConfig();
+ini.ReadFile('configuration.ini');
 
+Data_Path = ini.GetValues('Path Setting', 'DATA_PATH');
+home = ini.GetValues('Path Setting', 'HOME_PATH');
+
+synchronization_1_Output = strcat(home, '/synchronization_1_Output');
+vedio_signals = dir(strcat(synchronization_1_Output, '/*_Before_Denoised_Data.mat'));      % list all the .mat files
+
+synchronization_2_Output = strcat(home, '/synchronization_2_Output');
+    mkdir_if_not_exist(synchronization_2_Output);
+    
 % Combine signals from different vedios together
 for m = 1:size(vedio_signals, 1)
-    signal_file = strcat('./synchronization_1_Output/Vedio_' ,num2str(m), '_Before_Denoised_Data.mat');
+    signal_file = strcat(synchronization_1_Output, '/Vedio_' ,num2str(m), '_Before_Denoised_Data.mat');
     load(signal_file);  % load data in each signal file
     
     diff_Ecg_HR         = diff(Ecg_Data(:, 2));     % second column of Ecg_Data is 'HR' data
@@ -110,5 +119,5 @@ for m = 1:size(vedio_signals, 1)
         i = i + 1;
     end
     
-    save(strcat('./synchronization_2_Output/Vedio_', num2str(m), '_After_Denoised_Data.mat'),'Ecg_Data_HR_New', 'diff_Ecg_HR', 'Ecg_Data_RR_New', 'diff_Ecg_RR');
+    save(strcat(synchronization_2_Output, '/Vedio_', num2str(m), '_After_Denoised_Data.mat'),'Ecg_Data_HR_New', 'diff_Ecg_HR', 'Ecg_Data_RR_New', 'diff_Ecg_RR');
 end
