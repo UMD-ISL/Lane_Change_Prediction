@@ -216,9 +216,10 @@ for m = 1:num_folder
     ACC_RAW_start_Time  = Start_time_reference{8,m};
 
     Rsp_Data(:,1)       = Rsp_Data(1:end,1) - Rsp_Data(1,1);
+    % delete date information, only reserve hour, minute, second
+    % information
     Rsp_Data(:,1)       = Rsp_Data(:,1) + datenum(RSP_start_Time) ...
                             - floor(datenum(RSP_start_Time));
-
     Gsr_Data(:,1)       = Gsr_Data(1:end,1) - Gsr_Data(1,1);
     Gsr_Data(:,1)       = Gsr_Data(:,1) + datenum(GSR_start_Time) ...
                             - floor(datenum(GSR_start_Time));
