@@ -76,12 +76,12 @@ for m=1:size(vedio_signals,1)
     %% startTime information extraction for synchronizing signals
     % use lateset start time as the syncrhonized start time
     start_time = max([  datenum(OBD_start_Time)  - floor(datenum(OBD_start_Time));...
-                       datenum(GSR_start_Time)  - floor(datenum(GSR_start_Time));...
-                       datenum(ECG_start_Time)  - floor(datenum(ECG_start_Time));...
-                       datenum(RSP_start_Time)  - floor(datenum(RSP_start_Time));...
-                       datenum(ECG_RAW_start_Time)  - floor(datenum(ECG_RAW_start_Time));...
-                       datenum(GSR_RAW_start_Time)  - floor(datenum(GSR_RAW_start_Time));...
-                       datenum(BELT_RAW_start_Time)  - floor(datenum(BELT_RAW_start_Time));...
+                        datenum(GSR_start_Time)  - floor(datenum(GSR_start_Time));...
+                        datenum(ECG_start_Time)  - floor(datenum(ECG_start_Time));...
+                        datenum(RSP_start_Time)  - floor(datenum(RSP_start_Time));...
+                        datenum(ECG_RAW_start_Time)  - floor(datenum(ECG_RAW_start_Time));...
+                        datenum(GSR_RAW_start_Time)  - floor(datenum(GSR_RAW_start_Time));...
+                        datenum(BELT_RAW_start_Time) - floor(datenum(BELT_RAW_start_Time));...
                      ]);
     % use earliest time as the syncrhonized end time
     stop_time = min( [Ecg_Data(end,1), Gsr_Data(end,1), Rsp_Data(end,1), ...
@@ -91,29 +91,29 @@ for m=1:size(vedio_signals,1)
     %% synchronization : This part is used to synchronize the data
     Sample_Rate = 10;       % synchronization frequency: 10 Hz
     time_step = (1/Sample_Rate) / 24 / 3600;        % the time step between the two data next to each other
-    time_length = abs((stop_time-start_time)) * 24 * 3600;  % duration between start time and stop time
+    time_length = abs((stop_time - start_time)) * 24 * 3600;  % duration between start time and stop time
     tq  = (0:0.1:time_length)';     % transportation here
     
     %% Up-Sampling for multiple signals
     % interpolation for Ecg data
-    [~, idx_1]    = min( abs(Ecg_Data(:,1) - start_time) ); 
-    [~, idx_2]    = min( abs(Ecg_Data(:,1) - stop_time) );  
+    [~, idx_1]    = min( abs(Ecg_Data(:,1) - start_time) ); % the time index that closest to the start time
+    [~, idx_2]    = min( abs(Ecg_Data(:,1) - stop_time) );  % find the time index that closest to the end time
     
-    v   = Ecg_Data(idx_1:idx_2, [2,3]);
-    t   = ( Ecg_Data(idx_1:idx_2, 1) - Ecg_Data(idx_1, 1) ) * 24 * 3600;
-    vq_ecg = interp1(t, v, tq, 'linear');       % use linear interpolation
+    v   = Ecg_Data(idx_1:idx_2, [2,3]);     % need the second and third comlun data
+    t   = ( Ecg_Data(idx_1:idx_2, 1) - Ecg_Data(idx_1, 1) ) * 24 * 3600;    % change the time format to a very accute relative format
+    vq_ecg = interp1(t, v, tq, 'linear');                                   % use linear interpolation
 
     % interpolation for Gsr data
-    [none_use_1, idx_1] = min(abs(Gsr_Data(:,1) - start_time)); 
-    [none_use_2, idx_2] = min(abs(Gsr_Data(:,1) - stop_time));  
+    [none_use_1, idx_1] = min(abs(Gsr_Data(:,1) - start_time));     % find the time index that closest to the start time
+    [none_use_2, idx_2] = min(abs(Gsr_Data(:,1) - stop_time));      % find the time index that closest to the end time
     
     v   = Gsr_Data(idx_1:idx_2, 2:end);
     t   = (Gsr_Data(idx_1:idx_2, 1) - Gsr_Data(idx_1, 1)) * 24 * 3600;
     vq_gsr = interp1(t, v, tq, 'linear');
 
     % interpolation for Rsp data
-    [none_use_1, idx_1] = min(abs(Rsp_Data(:,1) - start_time)); 
-    [none_use_2, idx_2] = min(abs(Rsp_Data(:,1) - stop_time));  
+    [none_use_1, idx_1] = min(abs(Rsp_Data(:,1) - start_time));     % find the time index that closest to the start time
+    [none_use_2, idx_2] = min(abs(Rsp_Data(:,1) - stop_time));      % find the time index that closest to the end time
     
     v = Rsp_Data(idx_1:idx_2, 2:end);
     t = (Rsp_Data(idx_1:idx_2, 1) - Rsp_Data(idx_1, 1)) * 24 * 3600;
@@ -134,12 +134,12 @@ for m=1:size(vedio_signals,1)
     [none_use_1, idx_1] = min(abs(GSR_RAW_Data(:,1) - start_time)); 
     [none_use_2, idx_2] = min(abs(GSR_RAW_Data(:,1) - stop_time));  
     
-    v   = GSR_RAW_Data(idx_1:idx_2, 3);
+    v   = GSR_RAW_Data(idx_1:idx_2, 3);             % only use the thrid column data
     t   = ( GSR_RAW_Data(idx_1:idx_2,1) - GSR_RAW_Data(idx_1,1) ) * 24 * 3600;
     vq_gsr_raw = interp1(t, v, tq, 'linear');
     
     if isnan(vq_gsr_raw(end,1))
-        vq_gsr_raw(end,1)=vq_gsr_raw(end-1,1);
+        vq_gsr_raw(end,1) = vq_gsr_raw(end-1,1);
     end
     
     data_All_cal    = [tq, vq_ecg, vq_rsp, vq_gsr, vq_gsr_raw];
@@ -147,7 +147,7 @@ for m=1:size(vedio_signals,1)
     data_All_BELT   = [vq_belt_raw_time,    vq_belt_raw];
 
     %% doing with target
-    target_idx=target_Data;
+    target_idx = target_Data;
 
     target_idx(:,1) = datenum(target_idx(:,1)) - floor(datenum(target_idx(:,1)));
     target_idx(:,2) = datenum(target_idx(:,2)) - floor(datenum(target_idx(:,2)));
@@ -156,13 +156,13 @@ for m=1:size(vedio_signals,1)
     target_idx(:,2) = target_idx(:,2) + baseline;
     
     % Retrive the number of Lane Change
-    Lane_Change_event = length(find(target_idx(:,16)==1));  % find how many lange changes in one vedio
+    Lane_Change_event = length(find(target_idx(:,16) == 1));  % find how many lange changes in one vedio
     num_lane_change = num_lane_change + Lane_Change_event;
     Target = zeros(size(data_All_cal(:,1)));
 
-    for i=1:length(target_idx(:,1))
-        index = find((data_All_cal(:,1) >= (target_idx(i,1) - start_time)*24*3600) ...
-                    & (data_All_cal(:,1) <= (target_idx(i,2) - start_time)*24*3600) ...
+    for i = 1:length(target_idx(:,1))
+        index = find((data_All_cal(:,1) >= (target_idx(i,1) - start_time) * 24 * 3600) ...
+                    & (data_All_cal(:,1) <= (target_idx(i,2) - start_time) * 24 * 3600) ...
                     & target_idx(i,16) == 1);
         Target(index) = 1;     %%
         

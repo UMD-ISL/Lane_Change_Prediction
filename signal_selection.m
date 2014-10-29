@@ -18,7 +18,7 @@ for m = 1:num_trips
     
     % denoise the spikes and choose the signal we want (with interpolate method)
     for j = 1:(num_data_columns - 1)      % read the text of each signal and do switch case job, ignore the last column (target)
-        signal_type = cell2mat(Text_Index(j+1,1));  % only use the following 'case' signals, use cell2mat function to translate 'cell' to 'mat'
+        signal_type = cell2mat(Text_Index(j+1, 1));  % only use the following 'case' signals, use cell2mat function to translate 'cell' to 'mat'
         if ( strcmp(signal_type, 'Ti/Te') || strcmp(signal_type, 'Ti/Tt') )
             continue;
         end
