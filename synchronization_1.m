@@ -154,7 +154,7 @@ for m = 1:num_folder
     k = k+1;
 
     % Save the intermedia process result, NAME FORMAT is following below
-    temp_file = strcat(synchronization_1_Output, '/Vedio_', num2str(m), '_temp_Data.mat');
+    temp_file = strcat(synchronization_1_Output, '/Video_', num2str(m), '_temp_Data.mat');
     save(temp_file, ...   % save temp data
         'Rsp_Data','Gsr_Data','Ecg_Data','Veh_Data','Text_Index', ...
         'GSR_RAW_Data','ECG_RAW_Data','BELT_RAW_Data','ACC_RAW_Data', ...
@@ -244,8 +244,8 @@ for m = 1:num_folder
     ACC_RAW_Data(:,1)   = ACC_RAW_Data(:,1) + datenum(ACC_RAW_start_Time) ...
                             - floor(datenum(ACC_RAW_start_Time));
 
-    % save ouput file, NAME FORMAT: 'Vedio_#_Before_denoised_data.mat'
-    save(strcat(synchronization_1_Output, '/Vedio_', num2str(m), '_Before_Denoised_Data.mat'));
+    % save ouput file, NAME FORMAT: 'Video_#_Before_denoised_data.mat'
+    save(strcat(synchronization_1_Output, '/Video_', num2str(m), '_Before_Denoised_Data.mat'));
     
     toc;    % PROGRAM EFFICIENCY ESTIMATE
 end         % end of program

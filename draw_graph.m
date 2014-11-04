@@ -1,4 +1,4 @@
-function figure_handler = draw_graph(time, signal_name, signal_data, target, vedio_index)
+function figure_handler = draw_graph(time, signal_name, signal_data, target, Video_index)
 
 figure_handler = figure;
 plot(time, signal_data);
@@ -6,7 +6,7 @@ hold on
 
 % assume 1 means lane change (LC) and 0 means no lane change (NLC)
 lane_change_points = find(target == 1);       % find the index list where lane chagne happened
-no_lane_change_points = find(target == 0);
+no_lane_change_points = find(target == 2);
 
 lane_change_start_points = lane_change_points(1);
 lane_change_end_points = [];
@@ -35,7 +35,14 @@ for k = 1:num_lane_change_event
     plot(time(start_point:end_point), signal_data(start_point:end_point), 'r', 'LineWidth', 2);
 end
 
-title(['Vedio ', num2str(vedio_index), '- signal: ', signal_name], 'FontSize', 12);
+num_no_lane_change_event = length(no_lane_change_start_points);
+for k = 1:num_no_lane_change_event
+    start_point = no_lane_change_start_points(k);
+    end_point = no_lane_change_end_points(k);
+    plot(time(start_point:end_point), signal_data(start_point:end_point), 'g', 'LineWidth', 2);
+end
+
+title(['Video ', num2str(Video_index), '- signal: ', signal_name], 'FontSize', 12);
 xlabel('time of data point (s)', 'FontSize', 12);
 
 hold off

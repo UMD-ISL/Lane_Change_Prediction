@@ -35,21 +35,19 @@ num_lane_change = 0;
 
 ini = IniConfig();
 ini.ReadFile('configuration.ini');
-
-Data_Path = ini.GetValues('Path Setting', 'DATA_PATH');
 home = ini.GetValues('Path Setting', 'HOME_PATH');
 
 synchronization_3_Output = strcat(home, '/synchronization_3_Output');
     mkdir_if_not_exist(synchronization_3_Output);
     
-vedio_signals = dir(strcat(home, '/synchronization_1_Output/Vedio_*.mat'));
+Video_signals = dir(strcat(home, '/synchronization_1_Output/Video_*.mat'));
 
 %% Processing
 tic;
-for m=1:size(vedio_signals,1)
+for m=1:size(Video_signals,1)
     % load data generated from phase I and II of synchronization
-    load(strcat(home, '/synchronization_1_Output/Vedio_' ,num2str(m), '_Before_Denoised_Data.mat'));
-    load(strcat(home, '/synchronization_2_Output/Vedio_' ,num2str(m), '_After_Denoised_Data.mat'));
+    load(strcat(home, '/synchronization_1_Output/Video_' ,num2str(m), '_Before_Denoised_Data.mat'));
+    load(strcat(home, '/synchronization_2_Output/Video_' ,num2str(m), '_After_Denoised_Data.mat'));
     
     Ecg_Data(:,2)=Ecg_Data_HR_New(:,2); % combine HR and RR singal together into Ecg signal
     Ecg_Data(:,3)=Ecg_Data_RR_New(:,2);
@@ -142,9 +140,12 @@ for m=1:size(vedio_signals,1)
         vq_gsr_raw(end,1) = vq_gsr_raw(end-1,1);
     end
     
-    data_All_cal    = [tq, vq_ecg, vq_rsp, vq_gsr, vq_gsr_raw];
-    data_All_ECG    = [vq_ecg_raw_time,    vq_ecg_raw];
-    data_All_BELT   = [vq_belt_raw_time,    vq_belt_raw];
+    % store all interpolation signal together
+    Ten_Hz_signals_data    = [tq, vq_ecg, vq_rsp, vq_gsr, vq_gsr_raw];
+    % store inpterpolated ECG signal
+    ECG_data    = [vq_ecg_raw_time,    vq_ecg_raw];
+    % store inpterpolated BELT signal
+    BELT_data   = [vq_belt_raw_time,    vq_belt_raw];
 
     %% doing with target
     target_idx = target_Data;
@@ -156,24 +157,24 @@ for m=1:size(vedio_signals,1)
     target_idx(:,2) = target_idx(:,2) + baseline;
     
     % Retrive the number of Lane Change
-    Lane_Change_event = length(find(target_idx(:,16) == 1));  % find how many lange changes in one vedio
+    Lane_Change_event = length(find(target_idx(:,16) == 1));  % find how many lange changes in one Video
     num_lane_change = num_lane_change + Lane_Change_event;
-    Target = zeros(size(data_All_cal(:,1)));
+    Target = zeros(size(Ten_Hz_signals_data(:,1)));
 
     for i = 1:length(target_idx(:,1))
-        index = find((data_All_cal(:,1) >= (target_idx(i,1) - start_time) * 24 * 3600) ...
-                    & (data_All_cal(:,1) <= (target_idx(i,2) - start_time) * 24 * 3600) ...
+        index = find((Ten_Hz_signals_data(:,1) >= (target_idx(i,1) - start_time) * 24 * 3600) ...
+                    & (Ten_Hz_signals_data(:,1) <= (target_idx(i,2) - start_time) * 24 * 3600) ...
                     & target_idx(i,16) == 1);
         Target(index) = 1;     %%
         
-        index = find((data_All_cal(:,1) >= (target_idx(i,1)-start_time)*24*3600) ...
-                    & (data_All_cal(:,1) <= (target_idx(i,2)-start_time)*24*3600) ...
+        index = find((Ten_Hz_signals_data(:,1) >= (target_idx(i,1)-start_time)*24*3600) ...
+                    & (Ten_Hz_signals_data(:,1) <= (target_idx(i,2)-start_time)*24*3600) ...
                     & target_idx(i,16) == 2);
         Target(index) = 2;     %%
     end
 
-    data_All_cal = [data_All_cal, Target];
-    save(strcat(synchronization_3_Output, '/Vedio_',num2str(m),'_Synchronized_Data.mat'),'data_All_cal','Text_Index','data_All_ECG','data_All_BELT');
+    Ten_Hz_signals_data = [Ten_Hz_signals_data, Target];
+    save(strcat(synchronization_3_Output, '/Video_',num2str(m),'_Synchronized_Data.mat'),'Ten_Hz_signals_data','Text_Index','ECG_data','BELT_data');
 end
 save(strcat(synchronization_3_Output, '/statistics.mat'), 'num_lane_change');
 toc;    % end of program

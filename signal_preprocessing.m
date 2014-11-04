@@ -32,16 +32,16 @@
 
 clc; clear all; close all;
 
-vedio_signals = dir('./synchronization_1_Output/*_Before_Denoised_Data.mat');      % list all the .mat files
-[num_trips, ~] = size(vedio_signals);        % find how many trips here
-load('./Synchronized_Dataset/vedio_1_Synchronized_Data.mat');
-[~, num_data_columns] = size(data_All_cal);
+Video_signals = dir('./synchronization_1_Output/*_Before_Denoised_Data.mat');      % list all the .mat files
+[num_trips, ~] = size(Video_signals);        % find how many trips here
+load('./Synchronized_Dataset/Video_1_Synchronized_Data.mat');
+[~, num_data_columns] = size(Ten_Hz_signals_data);
 
 % modify some information of previous generated synchronized data
 for i=1:num_trips
-    load(strcat('./Synchronized_Dataset/vedio_', num2str(i), '_Synchronized_Data.mat'));
+    load(strcat('./Synchronized_Dataset/Video_', num2str(i), '_Synchronized_Data.mat'));
     Text_Index{20,:} = 'GSR RAW';        % rename 'GSR (...)' into GSR RAW ???
-    save(strcat('./Synchronized_Dataset/vedio_', num2str(i), '_Synchronized_Data.mat'), 'Text_Index', 'data_All_cal', 'data_All_ECG', 'data_All_BELT');
+    save(strcat('./Synchronized_Dataset/Video_', num2str(i), '_Synchronized_Data.mat'), 'Text_Index', 'Ten_Hz_signals_data', 'ECG_data', 'BELT_data');
 end
 
 load('Synchronized_DataSet/statistics.mat');
