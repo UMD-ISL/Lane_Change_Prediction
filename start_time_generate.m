@@ -22,11 +22,12 @@ enumeration Signals;
 signal_number = 7;
 Start_time_reference = cell(signal_number, num_folder);
 
+tic;
 for m = 1:num_folder
     % read GSR.csv file  # 1
     [Data, Header, ~]   =  xlsread(strcat(Data_Path, '/', num2str(m),'/GSR.csv'));
     % find the column number of Timestamp
-    [truefalse, index]  = ismember('Timestamp', Header);
+    [~, index]  = ismember('Timestamp', Header);
     % convert double format to string format
     GSR_start_Time      = datestr(Data(1,index), 'HH:MM:SS.FFF');
     Start_time_reference{Signals.GSR, m} = GSR_start_Time;
@@ -34,7 +35,7 @@ for m = 1:num_folder
     % read ECG.csv file  # 2
     [Data, Header, ~]   =  xlsread(strcat(Data_Path, '/', num2str(m),'/ECG.csv'));
     % find the column number of Timestamp
-    [truefalse, index]  = ismember('Timestamp', Header);
+    [~, index]  = ismember('Timestamp', Header);
     ECG_start_Time      = datestr(Data(1,index), 'HH:MM:SS.FFF');
     Start_time_reference{Signals.ECG, m} = ECG_start_Time;
     
@@ -42,7 +43,7 @@ for m = 1:num_folder
     [Data, Header, ~]   =  xlsread(strcat(Data_Path, '/', num2str(m),'/RSP.csv'));  % have some problem here
     Header = Header(1,:);
     % find the column number of Timestamp
-    [truefalse, index]  = ismember('Timestamp', Header);
+    [~, index]  = ismember('Timestamp', Header);
     RSP_start_Time      = datestr(Data(1,index), 'HH:MM:SS.FFF');
     Start_time_reference{Signals.RSP, m} = RSP_start_Time;
     
@@ -56,22 +57,23 @@ for m = 1:num_folder
     % read ECGraw.csv file # 5
     [Data, Header, ~]   = xlsread(strcat(Data_Path, '/', num2str(m),'/ECGraw.csv'));
     % find the column number of Timestamp
-    [truefalse, index] = ismember('Timestamp', Header);
+    [~, index] = ismember('Timestamp', Header);
     % convert double format to string format
     ECG_RAW_start_Time      = datestr(Data(1,index), 'HH:MM:SS.FFF');
     Start_time_reference{Signals.ECG_RAW, m} = ECG_RAW_start_Time;
     
     % read GSRRaw.csv file # 6
-    [Data, Header, ~]   =  xlsread(strcat(Data_Path, '/', num2str(m),'/GSRRaw.csv'));
-    [truefalse, index]  = ismember('Timestamp', Header);
+    [Data, Header, ~]   =  xlsread(strcat(Data_Path, '/', num2str(m),'/GSR_RAW.xlsx'));
+    [~, index]  = ismember('Time', Header);
     % convert double format to string format
+    Data(1,index) = addtodate(Data(1,index), 4, 'hour');
     GSR_RAW_start_Time  = datestr(Data(1,index), 'HH:MM:SS.FFF');
     Start_time_reference{Signals.GSR_RAW, m} = GSR_RAW_start_Time;
     
     % read Belt.csv file # 7
     try
         [Data, Header, ~]   =  xlsread(strcat(Data_Path, '/', num2str(m),'/RSPraw.csv'));
-        [truefalse, index]  = ismember('Timestamp', Header);
+        [~, index]  = ismember('Timestamp', Header);
         % convert double format to string format
         BELT_RAW_start_Time  = datestr(Data(1,index), 'HH:MM:SS.FFF');
         Start_time_reference{Signals.BELT_RAW, m} = BELT_RAW_start_Time;
@@ -79,4 +81,5 @@ for m = 1:num_folder
         continue;
     end
 end         % end of program
+toc;
 save('Start_time_reference.mat', 'Start_time_reference');
