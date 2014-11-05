@@ -141,10 +141,11 @@ for m = 1:num_trips
     for j = 1:step_size:( num_Video_points - (window_size_ECG_raw - 1) )                               
         window_index        = j:( j + (window_size_ECG_raw - 1) );
         signal              = ECG_data(window_index, 2);
-        feature(1,1)        = signal(end,1);
+        feature(1,1)        = signal(end, 1);   % the last point of window as one feature
         feature(1,2)        = max(signal);
         feature(1,3)        = min(signal);
         feature(1,4)        = mean(signal);
+        % where is the fifth feature?
         feature_vector(j,:) = feature; 
     end
     
@@ -166,6 +167,7 @@ for m = 1:num_trips
         feature(1,2)        = max(signal);
         feature(1,3)        = min(signal);
         feature(1,4)        = mean(signal);
+        % where is the fifth feature?
         feature_vector(j,:) = feature; 
     end
    
