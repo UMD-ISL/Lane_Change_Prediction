@@ -59,8 +59,6 @@ target          =[];                % malloc target array
 %% data descprition
 time_before_lane_change = 20;
 lane_change_size        = 20;
-num_points_per_event    = 20;
-
 
 %% feature calculation configuration
 window_size_Ten_Hz_signals      = 20;
