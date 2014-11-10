@@ -55,17 +55,12 @@ methods_fre     ={'welch'};         % ?
 feature_all     =[];                % malloc feature array
 target          =[];                % malloc target array
 
-
-%% data descprition
-time_before_lane_change = 20;
-lane_change_size        = 20;
-
 %% feature calculation configuration
-window_size_Ten_Hz_signals      = 20;
+window_size_Ten_Hz_signals      = 10;
 % window size for ECG raw data is 256 because the sampling rate is 256 Hz
-window_size_ECG_raw             = 256 * 2;
+window_size_ECG_raw             = 256;
 % window size for BELT raw data is 26 because the sampling rate is 26 Hz
-window_size_BELT_raw            = 26 * 2;
+window_size_BELT_raw            = 26;
 step_size                       = 1;
 
 FLAG_Redo_Feature_Generation   = false; % the falg to see if need redo feature geneartion procedure
@@ -73,6 +68,7 @@ FLAG_Redo_Feature_Generation   = false; % the falg to see if need redo feature g
 %% Retrive the number of Lane Change
 tic;
 for m = 1:num_trips
+    disp(sprintf('Trip: (%d)', m));
     if true == FLAG_Redo_Feature_Generation
         break
     end
@@ -96,7 +92,9 @@ for m = 1:num_trips
     
     % store calculate before data? 10 Hz signal
     % calculate the feature generated from the 10Hz selected feature
+    disp('Ten Hz Feature');
     for k = 2:(num_selected_signal + 1)
+        disp('signal');
         % start from second column beacuse the first is 'time'
         % for each signal calculate the feature generated from five
         % different statistic attributes (origin, mean, max, min, and first
@@ -136,7 +134,8 @@ for m = 1:num_trips
     feature         = [];
     num_Video_points = size(ECG_data,1);
     
-    for j = 1:step_size:( num_Video_points - (window_size_ECG_raw - 1) )                               
+    disp('ECG 256 Hz Feature');
+    for j = 1:step_size:( num_Video_points - (window_size_ECG_raw - 1) )
         window_index        = j:( j + (window_size_ECG_raw - 1) );
         signal              = ECG_data(window_index, 2);
         feature(1,1)        = signal(end, 1);   % the last point of window as one feature
@@ -158,6 +157,7 @@ for m = 1:num_trips
     feature          = [];
     num_Video_points=size(BELT_data,1);
     
+    disp('BELT 26 Hz Feature');
     for j = 1:step_size:(num_Video_points - (window_size_BELT_raw-1))                               
         window_index        = j:( j + (window_size_BELT_raw - 1) );
         signal              = BELT_data(window_index, 2);
