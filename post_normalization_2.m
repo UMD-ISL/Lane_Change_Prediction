@@ -38,11 +38,11 @@ home = ini.GetValues('Path Setting', 'HOME_PATH');
 
 total_feature = 5;
 
-window_size_Ten_Hz_signals      = 20;
+window_size_Ten_Hz_signals      = 10;
 % window size for ECG raw data is 256 because the sampling rate is 256 Hz
-window_size_ECG_raw             = 256 * 2;
+window_size_ECG_raw             = 256;
 % window size for BELT raw data is 26 because the sampling rate is 26 Hz
-window_size_BELT_raw            = 26 * 2;
+window_size_BELT_raw            = 26;
 
 load(strcat(home, '\Synchronized_Dataset\statistics.mat'));
 % get the number of signal selected

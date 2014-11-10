@@ -40,7 +40,7 @@ load(strcat(home, '\Synchronized_Dataset\statistics.mat'));
 load(strcat(home,'\Synchronized_Dataset\Video_Ten_Hz_signals_feature_Final.mat'));
 
 time_before_Lane_Change = 20;
-lanechangesize          = 20;
+lane_change_size          = 20;
 
 for m = 1:num_trips
     eval(strcat('data_all_cell = Video_Ten_Hz_signals_feature_', num2str(m), ';'));
@@ -88,13 +88,13 @@ for m = 1:num_trips
         middle=[];
         for index = 1 : y1
             pointIndex = LaneBefore(index);
-            middle = [middle; invoker((pointIndex:(pointIndex + lanechangesize - 1)), 2:6)];
+            middle = [middle; invoker((pointIndex:(pointIndex + lane_change_size - 1)), 2:6)];
         end
         
         for index = 1 : y2
             pointIndex = NoLane(index);
             % add no lane change points after it
-            middle = [middle; invoker((pointIndex:(pointIndex + lanechangesize - 1)), 2:6)];
+            middle = [middle; invoker((pointIndex:(pointIndex + lane_change_size - 1)), 2:6)];
         end
         eval(strcat('Video_',num2str(m),'_events_feature{2,i} = middle;'));
     end
