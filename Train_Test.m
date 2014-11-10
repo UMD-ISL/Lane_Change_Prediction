@@ -45,7 +45,7 @@ num_points_per_event    = 20;
 % what is the number of layers here ?
 hidden_nodes            = 15;       % hidden node number in each layer
 learning_rate           = [0.05];      % MODIFY IT, also can add more learning rate
-train_test_ratio        = 1/3;      
+true_false_ratio        = 1/3;      
 feature_filter          = 1:45;     % nine signal * 5 features
 
 event_pool               = [];
@@ -63,19 +63,19 @@ false_negative          = 0;
 
 load(strcat(home, '/Post_normalization_3_Output/Videos_events_feature.mat'));
 
-%% Video_1 for train_3_19
 % the second is the number of signals
 for m = 1: num_trips
   eval(strcat('temp = Video_', num2str(m), '_events_feature;'));
   feature_vector = [];
-  for i = 1:size(temp, 2)
+  % for each signal
+  for i = 1:size(temp, 2)   % size(temp, 2) == 9
     feature_vector = [feature_vector, temp{2,i}];
   end
 
   train_temp = feature_vector(:, feature_filter)';
   eval(strcat('Video_', num2str(m), '_train_samples = train_temp;'));
   [~, c]      = size(train_temp);
-  num_events  = c / num_points_per_event * train_test_ratio;
+  num_events  = c / num_points_per_event * true_false_ratio;
 
   % lane change event
   for j = 1:num_events
@@ -96,7 +96,7 @@ load(strcat(home, '/index_test_10_folder.mat'));
 TrainedNN_Output = strcat(home, '/TrainedNN_Output');
 mkdir_if_not_exist(TrainedNN_Output);
 
-for k=1:10
+for k = 1:10
     disp(sprintf('Folder: (%d)', k));
     for mmm = 1:length(hidden_nodes)
         for nnn = 1:length(learning_rate)
@@ -116,9 +116,9 @@ for k=1:10
             NExcept               = setdiff(NFF, index_of_no_lane_change);
 
             testing_input          = [event_pool{:, index_of_lane_change}, no_event_pool{:,index_of_no_lane_change}];
-            testing_ground         = [ones(1, round(size(testing_input, 2) * train_test_ratio)), zeros(1, round(size(testing_input, 2) * (1 - train_test_ratio)))];
+            testing_ground         = [ones(1, round(size(testing_input, 2) * true_false_ratio)), zeros(1, round(size(testing_input, 2) * (1 - true_false_ratio)))];
             training_input         = [event_pool{:, Except}, no_event_pool{:, NExcept}];
-            training_ground        = [ones(1, round(size(training_input,2) * train_test_ratio)), zeros(1, round(size(training_input,2) * (1-train_test_ratio)))];
+            training_ground        = [ones(1, round(size(training_input,2) * true_false_ratio)), zeros(1, round(size(training_input,2) * (1-true_false_ratio)))];
 
             disp('Start training...'); tic;
             %% training NN
@@ -189,8 +189,8 @@ for k=1:10
     % close(figure1);
     %% plot confusion matrix
     Total_length    = size(OutputflagTs,2);
-    one_third       = OutputflagTs(1, 1:Total_length * train_test_ratio);
-    two_third       = OutputflagTs(1, (Total_length * train_test_ratio + 1):end);
+    one_third       = OutputflagTs(1, 1:Total_length * true_false_ratio);
+    two_third       = OutputflagTs(1, (Total_length * true_false_ratio + 1):end);
     true_positive   = true_positive + size(find(1 == one_third), 2);
     false_negative  = true_negative + size(find(0 == one_third), 2);
     false_positive  = false_positive + size(find(1 == two_third), 2);

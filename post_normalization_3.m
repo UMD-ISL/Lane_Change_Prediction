@@ -58,7 +58,7 @@ for m = 1:num_trips
         if( lane_change_target_index(k + 1) > (lane_change_target_index(k) + 2) )
             % use the index of first lane change event data as the lane
             % change event ID
-            lane_change_event_ID = [lane_change_event_ID, lane_change_target_index(m+1)];
+            lane_change_event_ID = [lane_change_event_ID, lane_change_target_index(k + 1)];
         end
     end
     

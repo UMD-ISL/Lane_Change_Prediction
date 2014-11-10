@@ -28,9 +28,7 @@ function [nn] = NNBuilder2(trainingInput, trainingTarget, testingInput, testingT
 				   
 				 else
 				 OutputflagTs(i_ts)=0;
-				 end
-				   
-				   
+                  end
 			end
         testingErrorAll = (OutputflagTs-testingTarget);                    %testing output 1?0?
         testingError = testingErrorAll(abs(testingErrorAll)>0.1);           % what value should be better.
