@@ -23,7 +23,7 @@
 %df
 %dsf
 %  Author:       Yuan Ma
-%  Date:         Oct.17.2014
+%  Date:         Nov.11.2014
 %  Revision:     0.1
 %  Partner:      Worked with Tianyu Wang, Yulong Li
 %  Copyright:    Intelligent System Laboratory
