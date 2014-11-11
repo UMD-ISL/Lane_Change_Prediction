@@ -2,7 +2,6 @@ function [num_selected_signal] = signal_selection(num_trips, num_data_columns)
 ini = IniConfig();
 ini.ReadFile('configuration.ini');
 
-%Data_directory = '../Lane_Change_original_data/';
 Output_Path = ini.GetValues('Signal Selection', 'OUTPUT_PATH');
 home = ini.GetValues('Path Setting', 'HOME_PATH');
 
