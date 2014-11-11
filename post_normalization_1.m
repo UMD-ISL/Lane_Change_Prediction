@@ -30,9 +30,9 @@
 
 %%
 %  Author:       Yuan Ma
-%  Date:         Oct.17.2014
+%  Date:         Nov.11.2014
 %  Revision:     0.1
-%  Partner:      Worked with Tianyu Wang, Yulong Li
+%  Partner:      Worked with Yulong Li
 %  Copyright:    Intelligent System Laboratory
 %                University of Michigan Dearborn
 
@@ -84,11 +84,11 @@ for m = 1:num_trips
     load(strcat(home, '/Synchronized_Dataset/Video_',num2str(m),'_Synchronized_Data.mat'));
     
     % Adding Windows
-    num_Video_points    = size(Ten_Hz_signals_data,1);
+    num_Video_points    = size(Ten_Hz_signals_data, 1);
     % save value 1 point before the last point in the window
     cal_before          = Ten_Hz_signals_data(window_size_Ten_Hz_signals - 1,:);
-    ECG_before          = ECG_data(window_size_ECG_raw - 1,:);
-    BELT_before         = BELT_data(window_size_BELT_raw - 1,:);
+    ECG_before          = ECG_data(window_size_ECG_raw - 1, :);
+    BELT_before         = BELT_data(window_size_BELT_raw - 1, :);
     
     % store calculate before data? 10 Hz signal
     % calculate the feature generated from the 10Hz selected feature
@@ -122,7 +122,7 @@ for m = 1:num_trips
     end
     
     % execute 'Video_m_L_cal = size(feature_vector,1);' ?
-    eval(strcat('Video_',num2str(m), '_Ten_Hz_signals_length', '=size(feature_vector,1);'));   
+    eval(strcat('Video_', num2str(m), '_Ten_Hz_signals_length', '=size(feature_vector,1);'));   
     save(strcat(Post_normalization_Ouput, '/', 'Video_',num2str(m), '_Ten_Hz_signals_feature.mat'), ...
         'feature_pool', strcat('Video_',num2str(m), '_Ten_Hz_signals_length'), 'cal_before');    
 
@@ -144,7 +144,7 @@ for m = 1:num_trips
         feature(1,2)        = max(signal);
         feature(1,3)        = min(signal);
         feature(1,4)        = mean(signal);
-        % where is the fifth feature?
+        % the fifth feature is added later
         feature_vector(j,:) = feature; 
     end
     toc
@@ -158,7 +158,7 @@ for m = 1:num_trips
     feature_vector   = [];
     feature_pool     = [];
     feature          = [];
-    num_Video_points=size(BELT_data,1);
+    num_Video_points=size(BELT_data, 1);
     
     disp('BELT 26 Hz Feature');
     for j = 1:step_size:(num_Video_points - (window_size_BELT_raw-1))                               
@@ -168,7 +168,7 @@ for m = 1:num_trips
         feature(1,2)        = max(signal);
         feature(1,3)        = min(signal);
         feature(1,4)        = mean(signal);
-        % where is the fifth feature?
+        % the fifth feature is added later
         feature_vector(j,:) = feature; 
     end
    
