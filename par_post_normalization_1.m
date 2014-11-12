@@ -73,12 +73,6 @@ step_size                       = 1;
 FLAG_Redo_Feature_Generation   = false; % the falg to see if need redo feature geneartion procedure
 
 %% turn on parallel computing mode
-try
-    parpool;
-catch ME
-    ;
-end
-
 tic;
 for m = 1:num_trips
     fprintf('Trip: (%d)\n', m);
