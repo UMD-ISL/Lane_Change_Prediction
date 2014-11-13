@@ -165,12 +165,12 @@ for m=1:size(Video_signals,1)
         index = find((Ten_Hz_signals_data(:,1) >= (target_idx(i,1) - start_time) * 24 * 3600) ...
                     & (Ten_Hz_signals_data(:,1) <= (target_idx(i,2) - start_time) * 24 * 3600) ...
                     & target_idx(i,16) == 1);
-        Target(index) = 1;     %%
+        Target(index) = 1;
         
         index = find((Ten_Hz_signals_data(:,1) >= (target_idx(i,1)-start_time)*24*3600) ...
                     & (Ten_Hz_signals_data(:,1) <= (target_idx(i,2)-start_time)*24*3600) ...
                     & target_idx(i,16) == 2);
-        Target(index) = 2;     %%
+        Target(index) = 2;
     end
 
     Ten_Hz_signals_data = [Ten_Hz_signals_data, Target];
