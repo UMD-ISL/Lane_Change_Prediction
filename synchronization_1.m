@@ -6,24 +6,40 @@
 %  Summary:
 %  This is the first file need to be excute for the whole project.
 %  This script converts all .xlsx data into .mat format for further
-%  processing
+%  processing and eliminate the nan data.
+%
+%  Input:
+%  Driver's recorded raw signal data
+%
+% * Respiration signal                     RSP.xlsx
+% * Galvanic skin response signal:         GSR.xlsx
+% * Heart Rate signal:                     HR.xlsx
+% * Vedio signal:                          OBD.xlsx
+% * Galvanic skin response raw signal:     GSR_RAW.xlsx
+% * Electrocardiography raw signal:        ECG_RAW.xlsx
+% * Belt signal:                           Belt.xlsx
+% * Acceleration signal:                   ACC.xlsx
+%
+%  Output:
+%  save processed .mat files in './synchronization_1_Output/Video_',
+%  num2str(m), '_Before_Denoised_Data.mat' format
+
 
 %%
 %  Examples: 
-%Provide sample usage code here
+%  Provide sample usage code here.
 
 %%
 %  Algorithm:
-%df
-%dsf
+%  There is no Algorithm implementation here.
 
 %%
 %  See also:
-% * ITEM1
-% * ITEM2
+%
+% * Nothing to refer here.
 
 %%
-%  Author:       Yuan Ma
+%  Editor:       Yuan Ma
 %  Date:         Oct.18.2014
 %  Revision:     0.1
 %  Partner:      Worked with Tianyu Wang, Yulong Li
