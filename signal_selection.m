@@ -1,4 +1,36 @@
+%% Signal_Selection.m
+
+%% Description
+%  File type:       Procedure
+%
+%  Summary:
+%  This is the first file need to be excute for the whole project.
+%  This script converts all .xlsx data into .mat format for further
+%  processing
+
+%%
+%  Examples: 
+%Provide sample usage code here
+
+%%
+%  Algorithm:
+%  There is no algorithm implementation in this file.
+
+%%
+%  See also:
+% * ITEM1
+% * ITEM2
+
+%%
+%  Author:       Yuan Ma
+%  Date:         Oct.18.2014
+%  Revision:     0.1
+%  Partner:      Worked with Tianyu Wang, Yulong Li
+%  Copyright:    Intelligent System Laboratory
+%                University of Michigan Dearborn
+
 function [num_selected_signal] = signal_selection(num_trips, num_data_columns)
+%% Configuration and Initilization
 ini = IniConfig();
 ini.ReadFile('configuration.ini');
 

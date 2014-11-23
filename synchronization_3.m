@@ -4,7 +4,10 @@
 %  File type:       Procedure
 %
 %  Summary:
-%  Detrend processing
+%  This is the third file need to be excute for the data synchronization.
+%  This script converts all .xlsx data into .mat format for further
+%  processing
+
 
 %%
 %  Examples: 

@@ -135,7 +135,6 @@ for m = 1:num_trips
     num_Video_points = size(ECG_data,1);
     
     disp('ECG 256 Hz Feature');
-    tic
     for j = 1:step_size:( num_Video_points - (window_size_ECG_raw - 1) )
         disp(sprintf('%d',j));
         window_index        = j:( j + (window_size_ECG_raw - 1) );
@@ -147,7 +146,6 @@ for m = 1:num_trips
         % the fifth feature is added later
         feature_vector(j,:) = feature; 
     end
-    toc
     
     feature_pool = [ECG_data((window_size_ECG_raw:end),1), feature_vector];
     eval(strcat('Video_',num2str(m), '_ECG_length', '=size(feature_vector,1);'));
