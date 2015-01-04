@@ -33,7 +33,6 @@
 clc; clear all; close all;
 ini = IniConfig();
 ini.ReadFile('configuration.ini');
-Data_Path = ini.GetValues('Path Setting', 'DATA_PATH');
 home = ini.GetValues('Path Setting', 'HOME_PATH');
 
 load(strcat(home, '\Synchronized_Dataset\statistics.mat'));

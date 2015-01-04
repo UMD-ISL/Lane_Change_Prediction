@@ -33,7 +33,6 @@
 clc; clear all; close all;
 ini = IniConfig();
 ini.ReadFile('configuration.ini');
-Data_Path = ini.GetValues('Path Setting', 'DATA_PATH');
 home = ini.GetValues('Path Setting', 'HOME_PATH');
 
 total_feature = 5;
@@ -257,7 +256,7 @@ for j = m:num_selected_signal
         eval(strcat('signal_length = Video_', num2str(m), '_Ten_Hz_signals_length;'));
         % seperate the video according to the the length of each signal
         % Video_cal_m(j) = [zeros(window_size_cal - 1, num_signal_attributes + 1); Video( (offset + 1 : offset + signal_length), : )];
-        eval(strcat('Video_BELT_feature_', num2str(m), ' = [Video( (offset + 1 : offset + signal_length), : )];'));
+%         eval(strcat('Video_BELT_feature_', num2str(m), ' = [Video( (offset + 1 : offset + signal_length), : )];'));
         eval(strcat('Video_Ten_Hz_signals_feature_', num2str(m), '{1, 9} = Video_BELT_feature_', num2str(m), ';'));
         offset = offset + signal_length;
     end

@@ -35,8 +35,8 @@ clc; clear all;
 ini = IniConfig();
 ini.ReadFile('configuration.ini');
 
-Data_Path = ini.GetValues('Path Setting', 'DATA_PATH');
-home = ini.GetValues('Path Setting', 'HOME_PATH');
+Data_Path = ini.GetValues('Dev Dataset Path', 'DATA_PATH');
+home = ini.GetValues('Dev Dataset Path', 'HOME_PATH');
 
 % make the folder where to save the output data
 synchronization_1_Output = strcat(home, '/synchronization_1_Output');

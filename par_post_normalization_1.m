@@ -42,14 +42,12 @@ clear all; clc; close all;
 try
     parpool
 catch ME
-    ;
 end
 
 ini = IniConfig();
 ini.ReadFile('configuration.ini');
 
 home = ini.GetValues('Path Setting', 'HOME_PATH');
-Data_Path = ini.GetValues('Path Setting', 'DATA_PATH');
 % extract the varible 'num_lane_change', 'num_selected_signal', 'num_trips'
 load(strcat(home, '/Synchronized_DataSet/statistics.mat'));
 % get the number of signal selected
@@ -128,7 +126,7 @@ for m = 1:num_trips
     % execute 'Video_m_L_cal = size(feature_vector,1);' ?
     eval(strcat('Video_',num2str(m), '_Ten_Hz_signals_length', '=size(feature_vector,1);'));   
     save(strcat(Post_normalization_Ouput, '/', 'Video_',num2str(m), '_Ten_Hz_signals_feature.mat'), ...
-        'feature_pool', strcat('Video_',num2str(m), '_Ten_Hz_signals_length'), 'cal_before');    
+        'feature_pool', strcat('Video_',num2str(m), '_Ten_Hz_signals_length'), 'cal_before');
 
     %% Deal with ECG Raw data 256 Hz
     % this part needs a lot of computation need speed up, by modifying

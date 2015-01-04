@@ -52,8 +52,8 @@ clear all; clc;     % Clear environment, and start counting running time
 ini = IniConfig();
 ini.ReadFile('configuration.ini');
 
-Data_Path = ini.GetValues('Path Setting', 'DATA_PATH');
-home = ini.GetValues('Path Setting', 'HOME_PATH');
+Data_Path = ini.GetValues('Dev Dataset Path', 'DATA_PATH');
+home = ini.GetValues('Dev Dataset Path', 'HOME_PATH');
 fd_list = dir(Data_Path);
 num_folder = 0;
 
@@ -75,64 +75,74 @@ for m = 1:num_folder
     disp('Enter Signal Processing Phase I');        % DEBUG MESSAGE
     
     % Process RSP Data
-    [Rsp_Data,Rsp_Txt,~] = xlsread(strcat(Data_Path, '/', num2str(m), ...
+    [Rsp_Data, Rsp_Txt, ~] = xlsread(strcat(Data_Path, '/', num2str(m), ...
         '/RSP.xlsx'));
+    disp(Rsp_Txt(1, :));       % DEBUG info
     if (Rsp_Data(1,1) > 0.5) && (Rsp_Data(end,1) < 0.5)
         Reverse = find(Rsp_Data(:,1) < 0.5);
         Rsp_Data(Reverse,1) = Rsp_Data(Reverse,1) + 1;
     end
 
     % Process GSR Data
-    [Gsr_Data,Gsr_Txt,~] = xlsread(strcat(Data_Path, '/', num2str(m), ...
+    [Gsr_Data, Gsr_Txt, ~] = xlsread(strcat(Data_Path, '/', num2str(m), ...
         '/GSR.xlsx'));
+    disp(Gsr_Txt(1, :));       % DEBUG info
     if (Gsr_Data(1,1) > 0.5) && (Gsr_Data(end,1) < 0.5)
         Reverse = find(Gsr_Data(:,1) < 0.5);
         Gsr_Data(Reverse,1) = Gsr_Data(Reverse,1) + 1;
     end
 
     % Process ECG Data
-    [Ecg_Data,Ecg_Txt,~] = xlsread(strcat(Data_Path, '/', num2str(m), ...
-        '/HR.xlsx'));
+    [Ecg_Data, Ecg_Txt, ~] = xlsread(strcat(Data_Path, '/', num2str(m), ...
+        '/ECG.xlsx'));
+    disp(Ecg_Txt(1, :));       % DEBUG info
     if (Ecg_Data(1,1) > 0.5) && (Ecg_Data(end,1) < 0.5)
         Reverse = find(Ecg_Data(:,1) < 0.5);
         Ecg_Data(Reverse,1) = Ecg_Data(Reverse,1) + 1;
     end
 
     % PROCESS OBD DATA ? not used ?
-    [Veh_Data,Veh_Txt,~] = xlsread(strcat(Data_Path, '/', num2str(m), ...
-        '/OBD.xlsx'));
+%     [Veh_Data,Veh_Txt,~] = xlsread(strcat(Data_Path, '/', num2str(m), ...
+%         '/OBD.csv'));
 
     % PROCESS GSR_RAW DATA
-    [GSR_RAW_Data,GSR_RAW_Txt] = xlsread(strcat(Data_Path, '/', num2str(m), ...
+    [GSR_RAW_Data, GSR_RAW_Txt] = xlsread(strcat(Data_Path, '/', num2str(m), ...
         '/GSR_RAW.xlsx'));
+    disp(GSR_RAW_Txt(1, :));       % DEBUG info
     if (GSR_RAW_Data(1,1) > 0.5) && (GSR_RAW_Data(end,1) < 0.5)
         Reverse = find(GSR_RAW_Data(:,1)<0.5);
         GSR_RAW_Data(Reverse,1) = GSR_RAW_Data(Reverse,1) + 1;
     end
 
     % PROCESS ECG_RAW DATA
-    [ECG_RAW_Data,ECG_RAW_Txt] = xlsread(strcat(Data_Path, '/', num2str(m), ...
-        '/ECG_RAW.xlsx'));
-    if (ECG_RAW_Data(1,1) > 0.5) && (ECG_RAW_Data(end,1) < 0.5)
-        Reverse = find(ECG_RAW_Data(:,1)<0.5);
-        ECG_RAW_Data(Reverse,1) = ECG_RAW_Data(Reverse,1) + 1;
+    [ECG_RAW_Data, ECG_RAW_Txt] = xlsread(strcat(Data_Path, '/', num2str(m), ...
+        '/ECGraw.csv'));
+    ECG_RAW_Txt(:,[1, 2, 3]) = ECG_RAW_Txt(:,[3, 1, 2]);
+    disp(ECG_RAW_Txt(1, :));       % DEBUG info
+    ECG_RAW_Data(:,[1, 2, 3]) = ECG_RAW_Data(:,[3, 1, 2]);
+    if (ECG_RAW_Data(1, 1) > 0.5) && (ECG_RAW_Data(end, 1) < 0.5)
+        Reverse = find(ECG_RAW_Data(:, 1)<0.5);
+        ECG_RAW_Data(Reverse, 1) = ECG_RAW_Data(Reverse, 1) + 1;
     end
 
     % PROCESS BELT DATA
-    [BELT_RAW_Data,BELT_RAW_Txt] = xlsread(strcat(Data_Path, '/', num2str(m), ...
-        '/Belt.xlsx'));
-    if (BELT_RAW_Data(1,1) > 0.5) && (BELT_RAW_Data(end,1) < 0.5)
-        Reverse = find(BELT_RAW_Data(:,1) < 0.5);
-        BELT_RAW_Data(Reverse,1) = BELT_RAW_Data(Reverse,1) + 1;
+    [BELT_RAW_Data, BELT_RAW_Txt] = xlsread(strcat(Data_Path, '/', num2str(m), ...
+        '/RSPraw.csv'));
+    BELT_RAW_Txt(:,[1, 2]) = BELT_RAW_Txt(:,[2, 1]);
+    disp(BELT_RAW_Txt(1, :));       % DEBUG info
+    BELT_RAW_Data(:,[1, 2]) = BELT_RAW_Data(:,[2, 1]);
+    if (BELT_RAW_Data(1, 1) > 0.5) && (BELT_RAW_Data(end, 1) < 0.5)
+        Reverse = find(BELT_RAW_Data(:, 1) < 0.5);
+        BELT_RAW_Data(Reverse, 1) = BELT_RAW_Data(Reverse, 1) + 1;
     end
 
     % PROCESS ACC DATA
-    [ACC_RAW_Data,ACC_RAW_Txt] = xlsread(strcat(Data_Path, '/', num2str(m), ...
-        '/Acc.xlsx'));
-    if (ACC_RAW_Data(1,1) > 0.5) && (ACC_RAW_Data(end,1) < 0.5)
-        Reverse = find(ACC_RAW_Data(:,1)<0.5);
-        ACC_RAW_Data(Reverse,1) = ACC_RAW_Data(Reverse,1) + 1;
-    end
+%     [ACC_RAW_Data, ACC_RAW_Txt] = xlsread(strcat(Data_Path, '/', num2str(m), ...
+%         '/Acc.xlsx'));
+%     if (ACC_RAW_Data(1,1) > 0.5) && (ACC_RAW_Data(end,1) < 0.5)
+%         Reverse = find(ACC_RAW_Data(:,1)<0.5);
+%         ACC_RAW_Data(Reverse,1) = ACC_RAW_Data(Reverse,1) + 1;
+%     end
 
     % save the mat raw data
     [target_Data, target_Txt, ~] = xlsread(strcat(Data_Path, '/', num2str(m), '/target.xls'));      
@@ -172,9 +182,12 @@ for m = 1:num_folder
     % Save the intermedia process result, NAME FORMAT is following below
     temp_file = strcat(synchronization_1_Output, '/Video_', num2str(m), '_temp_Data.mat');
     save(temp_file, ...   % save temp data
-        'Rsp_Data','Gsr_Data','Ecg_Data','Veh_Data','Text_Index', ...
-        'GSR_RAW_Data','ECG_RAW_Data','BELT_RAW_Data','ACC_RAW_Data', ...
+        'Rsp_Data','Gsr_Data','Ecg_Data','Text_Index', ...
+        'GSR_RAW_Data','ECG_RAW_Data','BELT_RAW_Data', ...
         'target_Data','m');
+%         'Rsp_Data','Gsr_Data','Ecg_Data','Veh_Data','Text_Index', ...
+%         'GSR_RAW_Data','ECG_RAW_Data','BELT_RAW_Data','ACC_RAW_Data', ...
+%         'target_Data','m');
     toc;
 
     %% Processing each Signal data (Phase II)
@@ -191,7 +204,7 @@ for m = 1:num_folder
     tic;                                            % PROGRAM EFFICIENCY ESTIMATE
     
     % Pre-process each signal: ECG signal
-    Ecg_Data(:,4:5) = [];
+%     Ecg_Data(:, 4:5) = [];
     [R,~] = find(isnan(Ecg_Data));          % find the NAN value position
     Ecg_Data(R,:) = [];
 
@@ -216,20 +229,20 @@ for m = 1:num_folder
     BELT_RAW_Data(R,:)=[];
 
     % Pre-process Acc signal
-    [R,~] = find(isnan(ACC_RAW_Data));      % find the NAN value position
-    ACC_RAW_Data(R,:)=[];
+%     [R,~] = find(isnan(ACC_RAW_Data));      % find the NAN value position
+%     ACC_RAW_Data(R,:)=[];
 
     % Time shifting process
     load(strcat(Data_Path, '/', 'Start_time_reference.mat'));
 
-    GSR_start_Time      = Start_time_reference{1,m};
-    ECG_start_Time      = Start_time_reference{2,m};
-    RSP_start_Time      = Start_time_reference{3,m};
-    OBD_start_Time      = Start_time_reference{4,m};
-    ECG_RAW_start_Time  = Start_time_reference{5,m};
-    GSR_RAW_start_Time  = Start_time_reference{6,m};
-    BELT_RAW_start_Time = Start_time_reference{7,m};
-    ACC_RAW_start_Time  = Start_time_reference{8,m};
+    GSR_start_Time      = Start_time_reference{1, m};
+    ECG_start_Time      = Start_time_reference{2, m};
+    RSP_start_Time      = Start_time_reference{3, m};
+    OBD_start_Time      = Start_time_reference{4, m};
+    ECG_RAW_start_Time  = Start_time_reference{5, m};
+    GSR_RAW_start_Time  = Start_time_reference{6, m};
+    BELT_RAW_start_Time = Start_time_reference{7, m};
+%     ACC_RAW_start_Time  = Start_time_reference{8,m};
 
     Rsp_Data(:,1)       = Rsp_Data(1:end,1) - Rsp_Data(1,1);
     % delete date information, only reserve hour, minute, second
@@ -240,32 +253,32 @@ for m = 1:num_folder
     Gsr_Data(:,1)       = Gsr_Data(:,1) + datenum(GSR_start_Time) ...
                             - floor(datenum(GSR_start_Time));
 
-    Ecg_Data(:,1)       = Ecg_Data(1:end,1) - Ecg_Data(1,1);
-    Ecg_Data(:,1)       = Ecg_Data(:,1) + datenum(ECG_start_Time) ...
+    Ecg_Data(:, 1)       = Ecg_Data(1:end, 1) - Ecg_Data(1, 1);
+    Ecg_Data(:, 1)       = Ecg_Data(:, 1) + datenum(ECG_start_Time) ...
                             - floor(datenum(ECG_start_Time));
 
-    ECG_RAW_Data(:,1)   = ECG_RAW_Data(1:end,1) - ECG_RAW_Data(1,1);
-    ECG_RAW_Data(:,1)   = ECG_RAW_Data(:,1) + datenum(ECG_RAW_start_Time) ...
+    ECG_RAW_Data(:, 3)   = ECG_RAW_Data(1:end, 1) - ECG_RAW_Data(1, 1);
+    ECG_RAW_Data(:, 3)   = ECG_RAW_Data(:, 1) + datenum(ECG_RAW_start_Time) ...
                             - floor(datenum(ECG_RAW_start_Time));
 
-    GSR_RAW_Data(:,1)   = GSR_RAW_Data(1:end,1) - GSR_RAW_Data(1,1);
-    GSR_RAW_Data(:,1)   = GSR_RAW_Data(:,1) + datenum(GSR_RAW_start_Time) ...
+    GSR_RAW_Data(:,1)   = GSR_RAW_Data(1:end, 1) - GSR_RAW_Data(1, 1);
+    GSR_RAW_Data(:,1)   = GSR_RAW_Data(:, 1) + datenum(GSR_RAW_start_Time) ...
                             - floor(datenum(GSR_RAW_start_Time));
 
-    BELT_RAW_Data(:,1)  = BELT_RAW_Data(1:end,1) - BELT_RAW_Data(1,1);
-    BELT_RAW_Data(:,1)  = BELT_RAW_Data(:,1) + datenum(BELT_RAW_start_Time) ...
+    BELT_RAW_Data(:,2)  = BELT_RAW_Data(1:end, 1) - BELT_RAW_Data(1, 1);
+    BELT_RAW_Data(:,2)  = BELT_RAW_Data(:, 1) + datenum(BELT_RAW_start_Time) ...
                             - floor(datenum(BELT_RAW_start_Time));
+                        
 
-    ACC_RAW_Data(:,1)   = ACC_RAW_Data(1:end,1) - ACC_RAW_Data(1,1);
-    ACC_RAW_Data(:,1)   = ACC_RAW_Data(:,1) + datenum(ACC_RAW_start_Time) ...
-                            - floor(datenum(ACC_RAW_start_Time));
+%     ACC_RAW_Data(:,1)   = ACC_RAW_Data(1:end,1) - ACC_RAW_Data(1,1);
+%     ACC_RAW_Data(:,1)   = ACC_RAW_Data(:,1) + datenum(ACC_RAW_start_Time) ...
+%                             - floor(datenum(ACC_RAW_start_Time));
 
     % save ouput file, NAME FORMAT: 'Video_#_Before_denoised_data.mat'
     save(strcat(synchronization_1_Output, '/Video_', num2str(m), '_Before_Denoised_Data.mat'));
     
     toc;    % PROGRAM EFFICIENCY ESTIMATE
 end         % end of program
-clear all;
 
 
 

@@ -65,14 +65,14 @@ for m=1:size(Video_signals,1)
     wavelet_Type = 'db3';        % the type of wavelet
     baseline_HR = 80;           % this constant set beacause of the result of current medical research, can be change
 
-    [c, l] = wavedec(Ecg_Data(:,2), wavelet_Levels, wavelet_Type);    % wavelet decompose
-    trend = wrcoef('a',c,l,wavelet_Type, wavelet_Levels);       % 'a' means approximation part / 'd' means detailed part
+    [c, l] = wavedec(Ecg_Data(:, 2), wavelet_Levels, wavelet_Type);    % wavelet decompose
+    trend = wrcoef('a',c, l, wavelet_Type, wavelet_Levels);       % 'a' means approximation part / 'd' means detailed part
     Ecg_Data(:,2) = Ecg_Data(:,2) - trend;                    % detrend the sigal by doing subsctraction
     Ecg_Data(:,2) = Ecg_Data(:,2) + baseline_HR;             %  add a common trend to the detrend signal
 
     %% process vehicle data (OBD signal?)
     Base_Time = datenum(OBD_start_Time) - floor(datenum(OBD_start_Time));   % get the start time of Base_Time during a day
-    Veh_Data(:,1) = Veh_Data(:,1)/3600/24 + Base_Time;              % translate the relative time into absolute time
+%     Veh_Data(:,1) = Veh_Data(:,1)/3600/24 + Base_Time;              % translate the relative time into absolute time
 
     %% startTime information extraction for synchronizing signals
     % use lateset start time as the syncrhonized start time
@@ -86,8 +86,10 @@ for m=1:size(Video_signals,1)
                      ]);
     % use earliest time as the syncrhonized end time
     stop_time = min( [Ecg_Data(end,1), Gsr_Data(end,1), Rsp_Data(end,1), ...
-                    Veh_Data(end,1), ECG_RAW_Data(end,1), ...
-                    GSR_RAW_Data(end,1), BELT_RAW_Data(end,1)]);
+                        ECG_RAW_Data(end,1), GSR_RAW_Data(end,1), ...
+                        BELT_RAW_Data(end,1)]);
+%                     Veh_Data(end,1), 
+                    
 
     %% synchronization : This part is used to synchronize the data
     Sample_Rate = 10;       % synchronization frequency: 10 Hz
@@ -165,13 +167,12 @@ for m=1:size(Video_signals,1)
     Target = zeros(size(Ten_Hz_signals_data(:,1)));
 
     for i = 1:length(target_idx(:,1))
-        index = find((Ten_Hz_signals_data(:,1) >= (target_idx(i,1) - start_time) * 24 * 3600) ...
-                    & (Ten_Hz_signals_data(:,1) <= (target_idx(i,2) - start_time) * 24 * 3600) ...
+        index = find((Ten_Hz_signals_data(:,1) >= (target_idx(i,1) - start_time) * 24 * 3600 - 2) ...
+                    & (Ten_Hz_signals_data(:,1) <= (target_idx(i,1) - start_time) * 24 * 3600) ...
                     & target_idx(i,16) == 1);
         Target(index) = 1;
-        
-        index = find((Ten_Hz_signals_data(:,1) >= (target_idx(i,1)-start_time)*24*3600) ...
-                    & (Ten_Hz_signals_data(:,1) <= (target_idx(i,2)-start_time)*24*3600) ...
+        index = find((Ten_Hz_signals_data(:,1) >= (target_idx(i,1) - start_time) * 24 * 3600 - 2) ...
+                    & (Ten_Hz_signals_data(:,1) <= (target_idx(i,1) - start_time) * 24 * 3600) ...
                     & target_idx(i,16) == 2);
         Target(index) = 2;
     end

@@ -42,7 +42,7 @@ ini = IniConfig();
 ini.ReadFile('configuration.ini');
 
 home = ini.GetValues('Path Setting', 'HOME_PATH');
-Data_Path = ini.GetValues('Path Setting', 'DATA_PATH');
+
 % extract the varible 'num_lane_change', 'num_selected_signal', 'num_trips'
 load(strcat(home, '/Synchronized_DataSet/statistics.mat'));
 % get the number of signal selected
@@ -136,7 +136,6 @@ for m = 1:num_trips
     
     disp('ECG 256 Hz Feature');
     for j = 1:step_size:( num_Video_points - (window_size_ECG_raw - 1) )
-        disp(sprintf('%d',j));
         window_index        = j:( j + (window_size_ECG_raw - 1) );
         signal              = ECG_data(window_index, 2);
         feature(1,1)        = signal(end, 1);   % the last point of window as one feature
