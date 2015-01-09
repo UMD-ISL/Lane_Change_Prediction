@@ -10,6 +10,7 @@ This project want to predict driver's lane change envent in advanced using drive
 #### Dataset
 Dataset is forbidden to share on the Github.
 
+#### Code
 ##### Please run the code contained in this folder in the following sequence:
 1. Change the configuration file to set the program home path and data repository path.
 	* configuration.ini
