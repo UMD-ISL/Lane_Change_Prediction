@@ -1,5 +1,6 @@
 # Lane Change Prediction prototype code
 **copyright**: @Univeristy of Michigan Dearborn - Intelligent System Laboratory
+
 **editor**: myuan@umich.edu
 
 
