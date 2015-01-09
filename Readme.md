@@ -1,10 +1,2 @@
-# lane change prediction project
-
-## Data description
-
-### Belt signal
-Origin data: two 
-
-| Time     |	value	   |
-|----------|---------------|
-|		   |  			   |
+# Lane_Change_Prediction
+Lane_Change_Prediction
