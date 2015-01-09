@@ -1,7 +1,14 @@
-# Lane_Change_Prediction
-Lane_Change_Prediction
+# Lane Change Prediction prototype code
+**copyright**: @Univeristy of Michigan Dearborn - Intelligent System Laboratory
+**editor**: myuan@umich.edu
 
-#####Please run the code contained in this folder in the following sequence:
+#### Description
+This project want to predict driver's lane change envent in advanced using drivers' physiological signal feature.
+
+#### Dataset
+Dataset is forbidden to share on the Github.
+
+##### Please run the code contained in this folder in the following sequence:
 1. Change the configuration file to set the program home path and data repository path.
 	* configuration.ini
 2. Strating time exraction pahse
