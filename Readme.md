@@ -1,5 +1,7 @@
 # Lane Change Prediction prototype code
-**copyright**: @Univeristy of Michigan Dearborn - Intelligent System Laboratory**editor**: myuan@umich.edu
+**copyright**: @Univeristy of Michigan Dearborn - Intelligent System Laboratory
+**editor**: myuan@umich.edu
+
 
 #### Description
 This project want to predict driver's lane change envent in advanced using drivers' physiological signal feature.
