@@ -33,7 +33,7 @@ enumeration Signals;
 signal_number = 7;
 Start_time_reference = cell(signal_number, num_folder);
 
-%%
+%% parallelly read original signal data file and get signal start time
 parfor m = 1:num_folder
     disp('Enter into a new folder');
     

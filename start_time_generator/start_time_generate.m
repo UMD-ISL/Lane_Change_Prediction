@@ -34,74 +34,56 @@ enumeration Signals;
 signal_number = 7;
 Start_time_reference = cell(signal_number, num_folder);
 
-%%
-tic;
-for m = 1:num_folder
-    disp('Enter into a new folder');
-    % read GSR.csv file  # 1
-    [Data, Header, ~]   =  xlsread(strcat(Data_Path, '/', num2str(m),'/GSR.csv'));
-    % find the column number of Timestamp
-    [~, index]  = ismember('Timestamp', Header);
-    % convert double format to string format
-    GSR_start_Time      = datestr(Data(1,index), 'HH:MM:SS.FFF');
-    Start_time_reference{Signals.GSR, m} = GSR_start_Time;
-    disp('Get GSR signal time reference');
+%% read original signal data file and get signal start time
+parfor m = 1:num_folder
+   % 1: Signals.GSR
+    GSR_filepath = strcat(Data_Path, '/', num2str(m),'/GSR.csv');
+    GSR_start_Time = GSR_StartTime_Generator(GSR_filepath);
+    disp('Get GSR signal time reference');   
     
-    % read ECG.csv file  # 2
-    [Data, Header, ~]   =  xlsread(strcat(Data_Path, '/', num2str(m),'/ECG.csv'));
-    % find the column number of Timestamp
-    [~, index]  = ismember('Timestamp', Header);
-    ECG_start_Time      = datestr(Data(1,index), 'HH:MM:SS.FFF');
-    Start_time_reference{Signals.ECG, m} = ECG_start_Time;
+    % 2: Signals.ECG
+    ECG_filepath = strcat(Data_Path, '/', num2str(m),'/ECG.csv');
+    ECG_start_Time = ECG_StartTime_Generator(ECG_filepath);
     disp('Get ECG signal time reference');
     
-    % read RSP.csv file  # 3
-    [Data, Header, ~]   =  xlsread(strcat(Data_Path, '/', num2str(m),'/RSP.csv'));  % have some problem here
-    Header = Header(1,:);
-    % find the column number of Timestamp
-    [~, index]  = ismember('Timestamp', Header);
-    RSP_start_Time      = datestr(Data(1,index), 'HH:MM:SS.FFF');
-    Start_time_reference{Signals.RSP, m} = RSP_start_Time;
+    % 3: Signals.RSP
+    RSP_filepath = strcat(Data_Path, '/', num2str(m),'/RSP.csv');
+    RSP_start_Time = RSP_StartTime_Generator(RSP_filepath);
     disp('Get RSP signal time reference');
     
-    % read OBD.csv file  # 4
-    [Data, Header, ~]   =  xlsread(strcat(Data_Path, '/', num2str(m),'/OBD.csv'));
-    timeformat          = '[0-9]+:[0-9]+:[0-9]+ (PM|AM)';
-    reg_time            = regexp(Header{3,1}, timeformat, 'match');
-    OBD_start_Time      = datestr(cell2mat(reg_time), 'HH:MM:SS.FFF');
-    Start_time_reference{Signals.OBD, m} = OBD_start_Time;
+    % 4: Signals.OBD
+    OBD_filepath = strcat(Data_Path, '/', num2str(m),'/OBD.csv');
+    OBD_start_Time = OBD_StartTime_Generator(OBD_filepath);
     disp('Get OBD signal time reference');
     
-    % read ECGraw.csv file # 5
-    [Data, Header, ~]   = xlsread(strcat(Data_Path, '/', num2str(m),'/ECGraw.csv'));
-    % find the column number of Timestamp
-    [~, index] = ismember('Timestamp', Header);
-    % convert double format to string format
-    ECG_RAW_start_Time      = datestr(Data(1,index), 'HH:MM:SS.FFF');
-    Start_time_reference{Signals.ECG_RAW, m} = ECG_RAW_start_Time;
+    % 5: Signals.ECG_RAW
+    ECG_RAW_filepath = strcat(Data_Path, '/', num2str(m),'/ECGraw.csv');
+    ECG_RAW_start_Time = ECG_RAW_StartTime_Generator(ECG_RAW_filepath);
     disp('Get ECG_RAW signal time reference');
     
-    % read GSRRaw.csv file # 6
-    [Data, Header, ~]   =  xlsread(strcat(Data_Path, '/', num2str(m),'/GSR_RAW.xlsx'));
-    [~, index]  = ismember('Time', Header);
-    % convert double format to string format
-    Data(1,index) = addtodate(Data(1,index), 4, 'hour');
-    GSR_RAW_start_Time  = datestr(Data(1,index), 'HH:MM:SS.FFF');
-    Start_time_reference{Signals.GSR_RAW, m} = GSR_RAW_start_Time;
+    % 6: Signals.GSR_RAW      
+    GSR_RAW_filepath = strcat(Data_Path, '/', num2str(m),'/GSR_RAW.xlsx');
+    GSR_RAW_start_Time = GSR_RAW_StartTime_Generator(GSR_RAW_filepath);
     disp('Get GSR_RAW signal time reference');
     
-    % read Belt.csv file # 7
+    % 7: Signals.BELT_RAW
+    BELT_RAW_filepath = strcat(Data_Path, '/', num2str(m),'/RSPraw.csv');
     try
-        [Data, Header, ~]   =  xlsread(strcat(Data_Path, '/', num2str(m),'/RSPraw.csv'));
-        [~, index]  = ismember('Timestamp', Header);
-        % convert double format to string format
-        BELT_RAW_start_Time  = datestr(Data(1,index), 'HH:MM:SS.FFF');
-        Start_time_reference{Signals.BELT_RAW, m} = BELT_RAW_start_Time;
+        BELT_RAW_start_Time = BELT_RAW_StartTime_Generator(BELT_RAW_filepath);
         disp('Get BELT_RAW signal time reference');
     catch
+        BELT_RAW_start_Time = RSP_start_Time;
         continue;
     end
+    
+    % 1: Signals.GSR    2: Signals.ECG      3: Signals.RSP
+    % 4: Signals.OBD    5: Signals.ECG_RAW  6: Signals.GSR_RAW
+    % 7: Signals.BELT_RAW
+    Start_time_reference(:, m) = {GSR_start_Time; ECG_start_Time; ...
+                            RSP_start_Time; OBD_start_Time; ...
+                            ECG_RAW_start_Time; GSR_RAW_start_Time; ...
+                            BELT_RAW_start_Time
+                        };
 end         % end of program
-toc;
 
 save(strcat(Output_Path, '/Start_time_reference.mat'), 'Start_time_reference');
