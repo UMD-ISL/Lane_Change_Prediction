@@ -28,7 +28,7 @@
 %  Revision:     0.1
 %  Partner:      Worked with Tianyu Wang, Yulong Li
 %  Copyright:    Intelligent System Laboratory
-%               University of Michigan Dearborn
+%                University of Michigan Dearborn
 
 clc; clear all; close all;
 
@@ -36,8 +36,6 @@ ini = IniConfig();
 ini.ReadFile('self_configuration.ini');
 
 Driver_name = 'Dev';
-
-home = ini.GetValues('Global Path Setting', 'HOME_PATH');
 
 Data_Path = strcat(ini.GetValues('Global Path Setting', 'DATA_PATH'), ...
     '/', ini.GetValues(strcat(Driver_name, ' Dataset Path'), 'DATA_PATH'));

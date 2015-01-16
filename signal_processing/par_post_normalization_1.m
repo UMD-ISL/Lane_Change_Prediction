@@ -45,15 +45,22 @@ catch ME
 end
 
 ini = IniConfig();
-ini.ReadFile('configuration.ini');
+ini.ReadFile('self_configuration.ini');
 
-home = ini.GetValues('Path Setting', 'HOME_PATH');
+Driver_name = 'Dev';
+
+Data_Path = strcat(ini.GetValues('Global Path Setting', 'DATA_PATH'), ...
+    '/', ini.GetValues(strcat(Driver_name, ' Dataset Path'), 'DATA_PATH'));
+
+Output_Path = strcat(ini.GetValues('Global Path Setting', 'OUTPUT_PATH'), ...
+    '/', ini.GetValues(strcat(Driver_name, ' Dataset Path'), 'DATA_PATH'));
+
 % extract the varible 'num_lane_change', 'num_selected_signal', 'num_trips'
-load(strcat(home, '/Synchronized_DataSet/statistics.mat'));
+load(strcat(Output_Path, '/Synchronized_DataSet/statistics.mat'));
 % get the number of signal selected
 % get the lane change number
 
-Post_normalization_Ouput = strcat(home, '/Post_normalization_Ouput');
+Post_normalization_Ouput = strcat(Output_Path, '/Post_normalization_Ouput');
 mkdir_if_not_exist(Post_normalization_Ouput);
 
 methods_fre     ={'welch'};         % ?      
@@ -86,7 +93,7 @@ for m = 1:num_trips
     feature_pool    = cell(7,1);       % feature_pool: Array type, store the calculated feature data
     feature         = [];
     feature_vector  = [];
-    load(strcat(home, '/Synchronized_Dataset/Video_',num2str(m),'_Synchronized_Data.mat'));
+    load(strcat(Output_Path, '/Synchronized_Dataset/Video_',num2str(m),'_Synchronized_Data.mat'));
     
     % Adding Windows
     num_Video_points    = size(Ten_Hz_signals_data,1);

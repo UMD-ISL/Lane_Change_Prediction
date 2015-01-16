@@ -46,7 +46,6 @@
 %  Copyright:    Intelligent System Laboratory
 %                University of Michigan Dearborn
 
-
 %% Initialization and Configuration
 clear all; clc;     % Clear environment, and start counting running time
 ini = IniConfig();
@@ -276,7 +275,6 @@ for m = 1:num_folder
     BELT_RAW_Data(:,2)  = BELT_RAW_Data(1:end, 1) - BELT_RAW_Data(1, 1);
     BELT_RAW_Data(:,2)  = BELT_RAW_Data(:, 1) + datenum(BELT_RAW_start_Time) ...
                             - floor(datenum(BELT_RAW_start_Time));
-                        
 
 %     ACC_RAW_Data(:,1)   = ACC_RAW_Data(1:end,1) - ACC_RAW_Data(1,1);
 %     ACC_RAW_Data(:,1)   = ACC_RAW_Data(:,1) + datenum(ACC_RAW_start_Time) ...
