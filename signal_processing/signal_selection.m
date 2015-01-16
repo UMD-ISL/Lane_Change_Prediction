@@ -32,14 +32,18 @@
 function [num_selected_signal] = signal_selection(num_trips, num_data_columns)
 %% Configuration and Initilization
 ini = IniConfig();
-ini.ReadFile('configuration.ini');
+ini.ReadFile('self_configuration.ini');
 
-Output_Path = ini.GetValues('Signal Selection', 'OUTPUT_PATH');
-home = ini.GetValues('Path Setting', 'HOME_PATH');
+Driver_name = 'Dev';
+
+Output_Path = strcat(ini.GetValues('Global Path Setting', 'OUTPUT_PATH'), ...
+    '/', ini.GetValues(strcat(Driver_name, ' Dataset Path'), 'DATA_PATH'));
+
+Figure_Output_Path = strcat(Output_Path, '/', ini.GetValues('Signal Selection', 'FIGURE_OUTPUT_PATH'));
 
 for m = 1:num_trips
-    load(strcat(home, '/Synchronized_Dataset/Video_', num2str(m), '_Synchronized_Data.mat'));
-    folder_name = strcat(Output_Path, '/Video_', num2str(m));
+    load(strcat(Output_Path, '/Synchronized_Dataset/Video_', num2str(m), '_Synchronized_Data.mat'));
+    folder_name = strcat(Figure_Output_Path, '/Video_', num2str(m));
     mkdir_if_not_exist(folder_name);
     
     time = Ten_Hz_signals_data(:,1);       % first column store the labeled time information
@@ -60,7 +64,7 @@ for m = 1:num_trips
                 selected_signal (:,1) = signal_data;
                 selected_text{1,1} = signal_type;
                 figure_handle = draw_graph(time, signal_type, signal_data, target, m);
-                saveas(figure_handle, strcat(Output_Path, '/Video_', num2str(m), '/', signal_type, '_signal_plot'), 'fig');
+                saveas(figure_handle, strcat(Figure_Output_Path, '/Video_', num2str(m), '/', signal_type, '_signal_plot'), 'fig');
                 close(figure_handle);
                 continue;
             case 'Te'
@@ -68,7 +72,7 @@ for m = 1:num_trips
                 selected_signal (:,2) = signal_data;
                 selected_text{2,1} = signal_type;
                 figure_handle = draw_graph(time, signal_type, signal_data, target, m);
-                saveas(figure_handle, strcat(Output_Path, '/Video_', num2str(m), '/', signal_type, '_signal_plot'), 'fig');
+                saveas(figure_handle, strcat(Figure_Output_Path, '/Video_', num2str(m), '/', signal_type, '_signal_plot'), 'fig');
                 close(figure_handle);
                 continue;
             case 'Ti'
@@ -76,7 +80,7 @@ for m = 1:num_trips
                 selected_signal (:,3) = signal_data;
                 selected_text{2,1} = signal_type;
                 figure_handle = draw_graph(time, signal_type, signal_data, target, m);
-                saveas(figure_handle, strcat(Output_Path, '/Video_', num2str(m), '/', signal_type, '_signal_plot'), 'fig');
+                saveas(figure_handle, strcat(Figure_Output_Path, '/Video_', num2str(m), '/', signal_type, '_signal_plot'), 'fig');
                 close(figure_handle);
                 continue;
             case 'Exp Vol'
@@ -84,7 +88,7 @@ for m = 1:num_trips
                 selected_signal (:,4) = signal_data;
                 selected_text{2,1} = signal_type;
                 figure_handle = draw_graph(time, signal_type, signal_data, target, m);
-                saveas(figure_handle, strcat(Output_Path, '/Video_', num2str(m), '/', signal_type, '_signal_plot'), 'fig');
+                saveas(figure_handle, strcat(Figure_Output_Path, '/Video_', num2str(m), '/', signal_type, '_signal_plot'), 'fig');
                 close(figure_handle);
                 continue;
             case 'Insp Vol'
@@ -92,7 +96,7 @@ for m = 1:num_trips
                 selected_signal (:,5) = signal_data;
                 selected_text{2,1} = signal_type;
                 figure_handle = draw_graph(time, signal_type, signal_data, target, m);
-                saveas(figure_handle, strcat(Output_Path, '/Video_', num2str(m), '/', signal_type, '_signal_plot'), 'fig');
+                saveas(figure_handle, strcat(Figure_Output_Path, '/Video_', num2str(m), '/', signal_type, '_signal_plot'), 'fig');
                 close(figure_handle);
                 continue;
             case 'qDEEL'
@@ -100,7 +104,7 @@ for m = 1:num_trips
                 selected_signal (:,6) = signal_data;
                 selected_text{2,1} = signal_type;
                 figure_handle = draw_graph(time, signal_type, signal_data, target, m);
-                saveas(figure_handle, strcat(Output_Path, '/Video_', num2str(m), '/', signal_type, '_signal_plot'), 'fig');
+                saveas(figure_handle, strcat(Figure_Output_Path, '/Video_', num2str(m), '/', signal_type, '_signal_plot'), 'fig');
                 close(figure_handle);
                 continue;
             case 'GSR RAW'
@@ -108,7 +112,7 @@ for m = 1:num_trips
                 selected_signal (:,7) = signal_data;
                 selected_text{2,1} = signal_type;
                 figure_handle = draw_graph(time, signal_type, signal_data, target, m);
-                saveas(figure_handle, strcat(Output_Path, '/Video_', num2str(m), '/', signal_type, '_signal_plot'), 'fig');
+                saveas(figure_handle, strcat(Figure_Output_Path, '/Video_', num2str(m), '/', signal_type, '_signal_plot'), 'fig');
                 close(figure_handle);
                 continue;
         end
@@ -118,7 +122,7 @@ for m = 1:num_trips
     selected_text = [selected_text; {'Lane Change'}];
     Ten_Hz_signals_data = selected_signal;
     Text_Index = selected_text;
-    mkdir_if_not_exist(strcat(home, './Singal_Selection_Output'));
-    save(strcat(home, './Singal_Selection_Output/', 'Video_',num2str(m),'_Synchronized_Selected_Signal_Data.mat'), ...
+    mkdir_if_not_exist(strcat(Output_Path, './Singal_Selection_Output'));
+    save(strcat(Output_Path, './Singal_Selection_Output/', 'Video_',num2str(m),'_Synchronized_Selected_Signal_Data.mat'), ...
         'Text_Index', 'Ten_Hz_signals_data', 'ECG_data', 'BELT_data');
 end

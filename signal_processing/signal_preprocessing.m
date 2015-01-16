@@ -32,18 +32,33 @@
 
 clc; clear all; close all;
 
-Video_signals = dir('./synchronization_1_Output/*_Before_Denoised_Data.mat');      % list all the .mat files
+ini = IniConfig();
+ini.ReadFile('self_configuration.ini');
+
+Driver_name = 'Dev';
+
+home = ini.GetValues('Global Path Setting', 'HOME_PATH');
+
+Data_Path = strcat(ini.GetValues('Global Path Setting', 'DATA_PATH'), ...
+    '/', ini.GetValues(strcat(Driver_name, ' Dataset Path'), 'DATA_PATH'));
+
+Output_Path = strcat(ini.GetValues('Global Path Setting', 'OUTPUT_PATH'), ...
+    '/', ini.GetValues(strcat(Driver_name, ' Dataset Path'), 'DATA_PATH'));
+
+Video_signals = dir(strcat(Output_Path, '/synchronization_1_Output/*_Before_Denoised_Data.mat'));      % list all the .mat files
 [num_trips, ~] = size(Video_signals);        % find how many trips here
-load('./Synchronized_Dataset/Video_1_Synchronized_Data.mat');
+
+load(strcat(Output_Path,'/Synchronized_Dataset/Video_1_Synchronized_Data.mat'));
 [~, num_data_columns] = size(Ten_Hz_signals_data);
 
 % modify some information of previous generated synchronized data
 for i=1:num_trips
-    load(strcat('./Synchronized_Dataset/Video_', num2str(i), '_Synchronized_Data.mat'));
+    load(strcat(Output_Path, '/Synchronized_Dataset/Video_', num2str(i), '_Synchronized_Data.mat'));
     Text_Index{20,:} = 'GSR RAW';        % rename 'GSR (...)' into GSR RAW ???
-    save(strcat('./Synchronized_Dataset/Video_', num2str(i), '_Synchronized_Data.mat'), 'Text_Index', 'Ten_Hz_signals_data', 'ECG_data', 'BELT_data');
+    save(strcat(Output_Path, '/Synchronized_Dataset/Video_', num2str(i), '_Synchronized_Data.mat'), 'Text_Index', 'Ten_Hz_signals_data', 'ECG_data', 'BELT_data');
 end
 
-load('Synchronized_DataSet/statistics.mat');
+%%
+load(strcat(Output_Path, '/Synchronized_DataSet/statistics.mat'));
 [num_selected_signal] = signal_selection(num_trips, num_data_columns);
-save('Synchronized_DataSet/statistics.mat','num_selected_signal','num_lane_change','num_trips');
+save(strcat(Output_Path, '/Synchronized_DataSet/statistics.mat'),'num_selected_signal','num_lane_change','num_trips');

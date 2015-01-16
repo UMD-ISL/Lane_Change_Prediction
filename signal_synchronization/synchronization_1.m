@@ -50,10 +50,18 @@
 %% Initialization and Configuration
 clear all; clc;     % Clear environment, and start counting running time
 ini = IniConfig();
-ini.ReadFile('configuration.ini');
+ini.ReadFile('self_configuration.ini');
 
-Data_Path = ini.GetValues('Dev Dataset Path', 'DATA_PATH');
-home = ini.GetValues('Dev Dataset Path', 'HOME_PATH');
+Driver_name = 'Dev';
+
+home = ini.GetValues('Global Path Setting', 'HOME_PATH');
+
+Data_Path = strcat(ini.GetValues('Global Path Setting', 'DATA_PATH'), ...
+    '/', ini.GetValues(strcat(Driver_name, ' Dataset Path'), 'DATA_PATH'));
+
+Output_Path = strcat(ini.GetValues('Global Path Setting', 'OUTPUT_PATH'), ...
+    '/', ini.GetValues(strcat(Driver_name, ' Dataset Path'), 'DATA_PATH'));
+
 fd_list = dir(Data_Path);
 num_folder = 0;
 
@@ -66,7 +74,7 @@ for i = 1:size(fd_list,1)
 end
 num_folder = num_folder - 2;    % ignore './' and '../'
 
-synchronization_1_Output = strcat(home, '/synchronization_1_Output');
+synchronization_1_Output = strcat(Output_Path, '/synchronization_1_Output');
     mkdir_if_not_exist(synchronization_1_Output);
     
 for m = 1:num_folder
@@ -194,7 +202,7 @@ for m = 1:num_folder
     % eliminate the nan value in the data
     
     % Clear all varibles but keep 'Data_Path' and 'synchronization_1_Output'
-    clearvars -except Data_Path synchronization_1_Output temp_file;             
+    clearvars -except Data_Path Output_Path synchronization_1_Output temp_file;             
     
     % load the data generated in Phase I
     load(temp_file);   % load temp data
@@ -233,7 +241,7 @@ for m = 1:num_folder
 %     ACC_RAW_Data(R,:)=[];
 
     % Time shifting process
-    load(strcat(Data_Path, '/', 'Start_time_reference.mat'));
+    load(strcat(Output_Path, '/', 'Start_time_reference.mat'));
 
     GSR_start_Time      = Start_time_reference{1, m};
     ECG_start_Time      = Start_time_reference{2, m};

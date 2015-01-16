@@ -3,7 +3,7 @@ clear all; clc;     % Clear environment, and start counting running time
 
 %%
 ini = IniConfig();
-ini.ReadFile('configuration.ini');
+ini.ReadFile('self_configuration.ini');
 Driver_name = 'Dev';
 
 home = ini.GetValues('Global Path Setting', 'HOME_PATH');

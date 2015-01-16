@@ -33,16 +33,23 @@
 %% Initialization and Configuration
 clc; clear all;
 ini = IniConfig();
-ini.ReadFile('configuration.ini');
+ini.ReadFile('self_configuration.ini');
 
-Data_Path = ini.GetValues('Dev Dataset Path', 'DATA_PATH');
-home = ini.GetValues('Dev Dataset Path', 'HOME_PATH');
+Driver_name = 'Dev';
+
+home = ini.GetValues('Global Path Setting', 'HOME_PATH');
+
+Data_Path = strcat(ini.GetValues('Global Path Setting', 'DATA_PATH'), ...
+    '/', ini.GetValues(strcat(Driver_name, ' Dataset Path'), 'DATA_PATH'));
+
+Output_Path = strcat(ini.GetValues('Global Path Setting', 'OUTPUT_PATH'), ...
+    '/', ini.GetValues(strcat(Driver_name, ' Dataset Path'), 'DATA_PATH'));
 
 % make the folder where to save the output data
-synchronization_1_Output = strcat(home, '/synchronization_1_Output');
+synchronization_1_Output = strcat(Output_Path, '/synchronization_1_Output');
 Video_signals = dir(strcat(synchronization_1_Output, '/*_Before_Denoised_Data.mat'));      % list all the .mat files
 
-synchronization_2_Output = strcat(home, '/synchronization_2_Output');
+synchronization_2_Output = strcat(Output_Path, '/synchronization_2_Output');
     mkdir_if_not_exist(synchronization_2_Output);
     
 %% Combine signals from different Videos together

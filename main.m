@@ -1,8 +1,9 @@
 %% Initialization
 clear all; clc; close all;
 addpath(genpath('./'));
-% 
-start_time_generate;
+
+%%
+% start_time_generate;
 % try
 %     parpool
 %     tic;
@@ -11,3 +12,15 @@ start_time_generate;
 %     delete(gcp);
 % catch ME
 % end
+
+%% synchronization
+synchronization_1
+
+%%
+synchronization_2
+
+%%
+synchronization_3
+
+%%
+signal_preprocessing

@@ -37,20 +37,29 @@ clc; clear all;
 num_lane_change = 0;
 
 ini = IniConfig();
-ini.ReadFile('configuration.ini');
-home = ini.GetValues('Path Setting', 'HOME_PATH');
+ini.ReadFile('self_configuration.ini');
 
-synchronization_3_Output = strcat(home, '/synchronization_3_Output');
+Driver_name = 'Dev';
+
+home = ini.GetValues('Global Path Setting', 'HOME_PATH');
+
+Data_Path = strcat(ini.GetValues('Global Path Setting', 'DATA_PATH'), ...
+    '/', ini.GetValues(strcat(Driver_name, ' Dataset Path'), 'DATA_PATH'));
+
+Output_Path = strcat(ini.GetValues('Global Path Setting', 'OUTPUT_PATH'), ...
+    '/', ini.GetValues(strcat(Driver_name, ' Dataset Path'), 'DATA_PATH'));
+
+synchronization_3_Output = strcat(Output_Path, '/synchronization_3_Output');
     mkdir_if_not_exist(synchronization_3_Output);
     
-Video_signals = dir(strcat(home, '/synchronization_1_Output/Video_*.mat'));
+Video_signals = dir(strcat(Output_Path, '/synchronization_1_Output/Video_*.mat'));
 
 %% Processing
 tic;
 for m=1:size(Video_signals,1)
     % load data generated from phase I and II of synchronization
-    load(strcat(home, '/synchronization_1_Output/Video_' ,num2str(m), '_Before_Denoised_Data.mat'));
-    load(strcat(home, '/synchronization_2_Output/Video_' ,num2str(m), '_After_Denoised_Data.mat'));
+    load(strcat(Output_Path, '/synchronization_1_Output/Video_' ,num2str(m), '_Before_Denoised_Data.mat'));
+    load(strcat(Output_Path, '/synchronization_2_Output/Video_' ,num2str(m), '_After_Denoised_Data.mat'));
     
     Ecg_Data(:,2)=Ecg_Data_HR_New(:,2); % combine HR and RR singal together into Ecg signal
     Ecg_Data(:,3)=Ecg_Data_RR_New(:,2);
@@ -183,4 +192,4 @@ end
 save(strcat(synchronization_3_Output, '/statistics.mat'), 'num_lane_change');
 toc;    % end of program
 
-copyfile(synchronization_3_Output, strcat(home, '/Synchronized_Dataset'));
+copyfile(synchronization_3_Output, strcat(Output_Path, '/Synchronized_Dataset'));
