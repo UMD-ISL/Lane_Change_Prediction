@@ -35,7 +35,7 @@ signal_number = 7;
 Start_time_reference = cell(signal_number, num_folder);
 
 %% read original signal data file and get signal start time
-parfor m = 1:num_folder
+for m = 1:num_folder
    % 1: Signals.GSR
     GSR_filepath = strcat(Data_Path, '/', num2str(m),'/GSR.csv');
     GSR_start_Time = GSR_StartTime_Generator(GSR_filepath);
