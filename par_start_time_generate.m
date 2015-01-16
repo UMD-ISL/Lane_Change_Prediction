@@ -1,7 +1,6 @@
 %% Initialization and Configuration
 clear all; clc;     % Clear environment, and start counting running time
 
-%%
 ini = IniConfig();
 ini.ReadFile('configuration.ini');
 Driver_name = 'Dev';
@@ -36,7 +35,7 @@ Start_time_reference = cell(signal_number, num_folder);
 
 %%
 tic;
-for m = 1:num_folder
+parfor m = 1:num_folder
     disp('Enter into a new folder');
     % read GSR.csv file  # 1
     [Data, Header, ~]   =  xlsread(strcat(Data_Path, '/', num2str(m),'/GSR.csv'));
@@ -44,7 +43,8 @@ for m = 1:num_folder
     [~, index]  = ismember('Timestamp', Header);
     % convert double format to string format
     GSR_start_Time      = datestr(Data(1,index), 'HH:MM:SS.FFF');
-    Start_time_reference{Signals.GSR, m} = GSR_start_Time;
+    % 1: Signals.GSR
+    Start_time_reference{1, m} = GSR_start_Time;
     disp('Get GSR signal time reference');
     
     % read ECG.csv file  # 2
@@ -52,7 +52,8 @@ for m = 1:num_folder
     % find the column number of Timestamp
     [~, index]  = ismember('Timestamp', Header);
     ECG_start_Time      = datestr(Data(1,index), 'HH:MM:SS.FFF');
-    Start_time_reference{Signals.ECG, m} = ECG_start_Time;
+    % 2: Signals.ECG
+    Start_time_reference{2, m} = ECG_start_Time;
     disp('Get ECG signal time reference');
     
     % read RSP.csv file  # 3
@@ -61,7 +62,8 @@ for m = 1:num_folder
     % find the column number of Timestamp
     [~, index]  = ismember('Timestamp', Header);
     RSP_start_Time      = datestr(Data(1,index), 'HH:MM:SS.FFF');
-    Start_time_reference{Signals.RSP, m} = RSP_start_Time;
+    % 3: Signals.RSP
+    Start_time_reference{3, m} = RSP_start_Time;
     disp('Get RSP signal time reference');
     
     % read OBD.csv file  # 4
@@ -69,7 +71,8 @@ for m = 1:num_folder
     timeformat          = '[0-9]+:[0-9]+:[0-9]+ (PM|AM)';
     reg_time            = regexp(Header{3,1}, timeformat, 'match');
     OBD_start_Time      = datestr(cell2mat(reg_time), 'HH:MM:SS.FFF');
-    Start_time_reference{Signals.OBD, m} = OBD_start_Time;
+    % 4: Signals.OBD
+    Start_time_reference{4, m} = OBD_start_Time;
     disp('Get OBD signal time reference');
     
     % read ECGraw.csv file # 5
@@ -78,7 +81,8 @@ for m = 1:num_folder
     [~, index] = ismember('Timestamp', Header);
     % convert double format to string format
     ECG_RAW_start_Time      = datestr(Data(1,index), 'HH:MM:SS.FFF');
-    Start_time_reference{Signals.ECG_RAW, m} = ECG_RAW_start_Time;
+    % 5: Signals.ECG_RAW
+    Start_time_reference{5, m} = ECG_RAW_start_Time;
     disp('Get ECG_RAW signal time reference');
     
     % read GSRRaw.csv file # 6
@@ -87,7 +91,8 @@ for m = 1:num_folder
     % convert double format to string format
     Data(1,index) = addtodate(Data(1,index), 4, 'hour');
     GSR_RAW_start_Time  = datestr(Data(1,index), 'HH:MM:SS.FFF');
-    Start_time_reference{Signals.GSR_RAW, m} = GSR_RAW_start_Time;
+    % 6: Signals.GSR_RAW
+    Start_time_reference{6, m} = GSR_RAW_start_Time;
     disp('Get GSR_RAW signal time reference');
     
     % read Belt.csv file # 7
@@ -96,7 +101,8 @@ for m = 1:num_folder
         [~, index]  = ismember('Timestamp', Header);
         % convert double format to string format
         BELT_RAW_start_Time  = datestr(Data(1,index), 'HH:MM:SS.FFF');
-        Start_time_reference{Signals.BELT_RAW, m} = BELT_RAW_start_Time;
+        % 7: Signals.BELT_RAW
+        Start_time_reference{7, m} = BELT_RAW_start_Time;
         disp('Get BELT_RAW signal time reference');
     catch
         continue;

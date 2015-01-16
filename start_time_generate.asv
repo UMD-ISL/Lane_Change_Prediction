@@ -1,6 +1,12 @@
 %% Initialization and Configuration
 clear all; clc;     % Clear environment, and start counting running time
 
+% try
+%     parpool
+% catch ME
+%     ;
+% end
+
 %%
 ini = IniConfig();
 ini.ReadFile('configuration.ini');
@@ -105,3 +111,5 @@ end         % end of program
 toc;
 
 save(strcat(Output_Path, '/Start_time_reference.mat'), 'Start_time_reference');
+
+% delete(gcp);
