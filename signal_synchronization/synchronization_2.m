@@ -33,17 +33,13 @@
 %% Initialization and Configuration
 clc; clear all;
 ini = IniConfig();
-ini.ReadFile('self_configuration.ini');
-
-Driver_name = 'Dev';
-
-home = ini.GetValues('Global Path Setting', 'HOME_PATH');
+ini.ReadFile('configuration.ini');
 
 Data_Path = strcat(ini.GetValues('Global Path Setting', 'DATA_PATH'), ...
-    '/', ini.GetValues(strcat(Driver_name, ' Dataset Path'), 'DATA_PATH'));
+    '/', ini.GetValues('Driver Dataset Path', 'DATA_PATH'));
 
 Output_Path = strcat(ini.GetValues('Global Path Setting', 'OUTPUT_PATH'), ...
-    '/', ini.GetValues(strcat(Driver_name, ' Dataset Path'), 'DATA_PATH'));
+    '/', ini.GetValues('Driver Dataset Path', 'DATA_PATH'));
 
 % make the folder where to save the output data
 synchronization_1_Output = strcat(Output_Path, '/synchronization_1_Output');

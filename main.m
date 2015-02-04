@@ -14,7 +14,7 @@ addpath(genpath('./'));
 % end
 
 %% synchronization
-synchronization_1
+% synchronization_1
 
 %%
 synchronization_2

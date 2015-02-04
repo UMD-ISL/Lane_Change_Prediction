@@ -37,17 +37,13 @@ clc; clear all;
 num_lane_change = 0;
 
 ini = IniConfig();
-ini.ReadFile('self_configuration.ini');
-
-Driver_name = 'Dev';
-
-home = ini.GetValues('Global Path Setting', 'HOME_PATH');
+ini.ReadFile('configuration.ini');
 
 Data_Path = strcat(ini.GetValues('Global Path Setting', 'DATA_PATH'), ...
-    '/', ini.GetValues(strcat(Driver_name, ' Dataset Path'), 'DATA_PATH'));
+    '/', ini.GetValues('Driver Dataset Path', 'DATA_PATH'));
 
 Output_Path = strcat(ini.GetValues('Global Path Setting', 'OUTPUT_PATH'), ...
-    '/', ini.GetValues(strcat(Driver_name, ' Dataset Path'), 'DATA_PATH'));
+    '/', ini.GetValues('Driver Dataset Path', 'DATA_PATH'));
 
 synchronization_3_Output = strcat(Output_Path, '/synchronization_3_Output');
     mkdir_if_not_exist(synchronization_3_Output);

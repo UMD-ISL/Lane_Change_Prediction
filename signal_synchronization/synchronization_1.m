@@ -11,14 +11,13 @@
 %  Input:
 %  Driver's recorded raw signal data
 %
-% * Respiration signal                     RSP.xlsx
-% * Galvanic skin response signal:         GSR.xlsx
-% * Heart Rate signal:                     HR.xlsx
-% * Vedio signal:                          OBD.xlsx
+% * Galvanic skin response signal:         GSR.csv
+% * Heart Rate signal:                     ECG.csv
+% * Respiration signal:                    RSP.csv
+% * Vedio signal:                          OBD.csv
+% * Electrocardiography raw signal:        ECG_RAW.csv
 % * Galvanic skin response raw signal:     GSR_RAW.xlsx
-% * Electrocardiography raw signal:        ECG_RAW.xlsx
-% * Belt signal:                           Belt.xlsx
-% * Acceleration signal:                   ACC.xlsx
+% * Respiration signal raw signal:         RSPraw.xlsx
 %
 %  Output:
 %  save processed .mat files in './synchronization_1_Output/Video_',
@@ -49,17 +48,13 @@
 %% Initialization and Configuration
 clear all; clc;     % Clear environment, and start counting running time
 ini = IniConfig();
-ini.ReadFile('self_configuration.ini');
-
-Driver_name = 'Dev';
-
-home = ini.GetValues('Global Path Setting', 'HOME_PATH');
+ini.ReadFile('configuration.ini');
 
 Data_Path = strcat(ini.GetValues('Global Path Setting', 'DATA_PATH'), ...
-    '/', ini.GetValues(strcat(Driver_name, ' Dataset Path'), 'DATA_PATH'));
+    '/', ini.GetValues('Driver Dataset Path', 'DATA_PATH'));
 
 Output_Path = strcat(ini.GetValues('Global Path Setting', 'OUTPUT_PATH'), ...
-    '/', ini.GetValues(strcat(Driver_name, ' Dataset Path'), 'DATA_PATH'));
+    '/', ini.GetValues('Driver Dataset Path', 'DATA_PATH'));
 
 fd_list = dir(Data_Path);
 num_folder = 0;
