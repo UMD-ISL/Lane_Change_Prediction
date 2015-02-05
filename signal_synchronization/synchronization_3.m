@@ -1,54 +1,9 @@
-%% Synchronization_3.m
-
-%% Description
-%  File type:       Procedure
-%
-%  Summary:
-%  This is the third file need to be excute for the data synchronization.
-%  This script converts all .xlsx data into .mat format for further
-%  processing
-
-
-%%
-%  Examples: 
-%Provide sample usage code here
-
-%%
-%  Algorithm:
-%df
-%dsf
-
-%%
-%  See also:
-% * ITEM1
-% * ITEM2
-
-%%
-%  Author:       Yuan Ma
-%  Date:         Oct.18.2014
-%  Revision:     0.1
-%  Partner:      Worked with Tianyu Wang, Yulong Li
-%  Copyright:    Intelligent System Laboratory
-%               University of Michigan Dearborn
-
-
 %%
 clc; clear all;
-num_lane_change = 0;
-
-ini = IniConfig();
-ini.ReadFile('configuration.ini');
-
-Data_Path = strcat(ini.GetValues('Global Path Setting', 'DATA_PATH'), ...
-    '/', ini.GetValues('Driver Dataset Path', 'DATA_PATH'));
-
-Output_Path = strcat(ini.GetValues('Global Path Setting', 'OUTPUT_PATH'), ...
-    '/', ini.GetValues('Driver Dataset Path', 'DATA_PATH'));
-
-synchronization_3_Output = strcat(Output_Path, '/synchronization_3_Output');
-    mkdir_if_not_exist(synchronization_3_Output);
-    
+[Data_Path, Output_Path] = loadGlobalPathSetting();
+synchronization_3_Output = createOutputFolder(Output_Path, 'synchronization_3_Output');
 Video_signals = dir(strcat(Output_Path, '/synchronization_1_Output/Video_*.mat'));
+num_lane_change = 0;
 
 %% Processing
 tic;

@@ -1,43 +1,35 @@
-function inputData = readPhysiSignalDataFiles(Data_Path, videoIndex)
+sfunction inputData = readPhysiSignalDataFiles(Data_Path, videoIndex)
 
     % Read GSR Data
+    % [GSR | SCL | SCR | Timestamp | Duration]
     [inputData.Gsr_Data, inputData.Gsr_Txt, ~] = xlsread(strcat( ...
         Data_Path, '/', num2str(videoIndex), '/GSR.csv'));
     
-    inputData.Gsr_Txt(:, [1, 2, 3, 4, 5])  = ...
-        inputData.Gsr_Txt(:, [4, 1, 2, 3, 5]);
-    inputData.Gsr_Data(:, [1, 2, 3, 4, 5]) = ...
-        inputData.Gsr_Data(:, [4, 1, 2, 3, 5]);
-    
     % Read ECG Data
+    % [HR | RR | Timestamp | Duration]
     [inputData.Ecg_Data, inputData.Ecg_Txt, ~] = xlsread(strcat( ...
-        Data_Path, '/', num2str(videoIndex), '/ECG.csv'));
-    
-    inputData.Ecg_Txt(:, [1, 2, 3, 4]) = inputData.Ecg_Txt(:, [3, 1, 2, 4]);
-    inputData.Ecg_Data(:, [1, 2, 3, 4]) = inputData.Ecg_Data(:, [3, 1, 2, 4]);
+        Data_Path, '/', num2str(videoIndex), '/ECG.csv'));  
     
     % Read RSP Data
+    % [Exp Vol | Insp Vol | qDEEL | Resp Rate | Resp Rate Inst | Te | Ti ... 
+    %  Ti/Te |Ti/Tt | Tpef/Te | Tt | Vent | Vt/Ti | Work of Breathing | ...
+    %  Timestamp | Duration]
     [inputData.Rsp_Data, inputData.Rsp_Txt, ~] = xlsread(strcat( ...
         Data_Path, '/', num2str(videoIndex), '/RSP.csv'));
     
-    
     % Read GSR_RAW Data
+    % [DateTime | GSR (raw) | GSR (microSiemens)]
     [inputData.GSR_RAW_Data, inputData.GSR_RAW_Txt] = xlsread(strcat( ...
-        Data_Path, '/', num2str(videoIndex), '/GSR_RAW.xlsx'));
+        Data_Path, '/', num2str(videoIndex), '/GSR_RAW.csv'));
     
     % Read ECG_RAW Data
+    % [SEM_ecg1 | SEM_ecg2 | Timestamp | Duration]
     [inputData.ECG_RAW_Data, inputData.ECG_RAW_Txt] = xlsread(strcat( ...
         Data_Path, '/', num2str(videoIndex), '/ECGraw.csv'));
-    
-    inputData.ECG_RAW_Txt(:, [1, 2, 3]) = inputData.ECG_RAW_Txt(:, [3, 1, 2]);
-    inputData.ECG_RAW_Data(:, [1, 2, 3]) = inputData.ECG_RAW_Data(:, [3, 1, 2]);
-    
-    
+
     % Read Belt Data
+    % [SEM_belt | Timestamp | Duration]
     [inputData.BELT_RAW_Data, inputData.BELT_RAW_Txt] = xlsread(strcat( ...
         Data_Path, '/', num2str(videoIndex), '/RSPraw.csv'));
-    
-    inputData.BELT_RAW_Txt(:, [1, 2])  = inputData.BELT_RAW_Txt(:, [2, 1]);
-    inputData.BELT_RAW_Data(:, [1, 2]) = inputData.BELT_RAW_Data(:, [2, 1]);
     
 end

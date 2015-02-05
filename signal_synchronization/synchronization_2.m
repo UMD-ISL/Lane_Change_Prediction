@@ -1,52 +1,12 @@
-%% Synchronization_2.m
-
-%% Description
-%  File type:       Procedure
-%
-%  Summary:
-%  This is the second file need to be excute for the whole project.
-%  This script converts all .xlsx data into .mat format for further
-%  processing
-
-%%
-%  Examples: 
-%Provide sample usage code here
-
-%%
-%  Algorithm:
-%  There is no algorithm implementation in this file.
-
-%%
-%  See also:
-% * ITEM1
-% * ITEM2
-
-%%
-%  Author:       Yuan Ma
-%  Date:         Oct.18.2014
-%  Revision:     0.1
-%  Partner:      Worked with Tianyu Wang, Yulong Li
-%  Copyright:    Intelligent System Laboratory
-%                University of Michigan Dearborn
-
-
 %% Initialization and Configuration
 clc; clear all;
-ini = IniConfig();
-ini.ReadFile('configuration.ini');
-
-Data_Path = strcat(ini.GetValues('Global Path Setting', 'DATA_PATH'), ...
-    '/', ini.GetValues('Driver Dataset Path', 'DATA_PATH'));
-
-Output_Path = strcat(ini.GetValues('Global Path Setting', 'OUTPUT_PATH'), ...
-    '/', ini.GetValues('Driver Dataset Path', 'DATA_PATH'));
+[Data_Path, Output_Path] = loadGlobalPathSetting();
 
 % make the folder where to save the output data
 synchronization_1_Output = strcat(Output_Path, '/synchronization_1_Output');
 Video_signals = dir(strcat(synchronization_1_Output, '/*_Before_Denoised_Data.mat'));      % list all the .mat files
 
-synchronization_2_Output = strcat(Output_Path, '/synchronization_2_Output');
-    mkdir_if_not_exist(synchronization_2_Output);
+synchronization_2_Output = createOutputFolder(Output_Path, 'synchronization_2_Output');
     
 %% Combine signals from different Videos together
 for m = 1:size(Video_signals, 1)
