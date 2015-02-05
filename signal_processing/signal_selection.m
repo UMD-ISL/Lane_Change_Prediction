@@ -32,12 +32,10 @@
 function [num_selected_signal] = signal_selection(num_trips, num_data_columns)
 %% Configuration and Initilization
 ini = IniConfig();
-ini.ReadFile('self_configuration.ini');
-
-Driver_name = 'Dev';
+ini.ReadFile('configuration.ini');
 
 Output_Path = strcat(ini.GetValues('Global Path Setting', 'OUTPUT_PATH'), ...
-    '/', ini.GetValues(strcat(Driver_name, ' Dataset Path'), 'DATA_PATH'));
+    '/', ini.GetValues('Driver Dataset Path', 'DATA_PATH'));
 
 Figure_Output_Path = strcat(Output_Path, '/', ini.GetValues('Signal Selection', 'FIGURE_OUTPUT_PATH'));
 

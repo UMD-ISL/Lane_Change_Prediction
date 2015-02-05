@@ -39,15 +39,13 @@
 %% Initialization
 clear all; clc; close all;
 ini = IniConfig();
-ini.ReadFile('self_configuration.ini');
-
-Driver_name = 'Dev';
+ini.ReadFile('configuration.ini');
 
 Data_Path = strcat(ini.GetValues('Global Path Setting', 'DATA_PATH'), ...
-    '/', ini.GetValues(strcat(Driver_name, ' Dataset Path'), 'DATA_PATH'));
+    '/', ini.GetValues('Driver Dataset Path', 'DATA_PATH'));
 
 Output_Path = strcat(ini.GetValues('Global Path Setting', 'OUTPUT_PATH'), ...
-    '/', ini.GetValues(strcat(Driver_name, ' Dataset Path'), 'DATA_PATH'));
+    '/', ini.GetValues('Driver Dataset Path', 'DATA_PATH'));
 
 % extract the varible 'num_lane_change', 'num_selected_signal', 'num_trips'
 load(strcat(Output_Path, '/Synchronized_DataSet/statistics.mat'));

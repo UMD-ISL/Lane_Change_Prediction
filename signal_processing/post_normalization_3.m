@@ -33,10 +33,12 @@
 clc; clear all; close all;
 ini = IniConfig();
 ini.ReadFile('configuration.ini');
-home = ini.GetValues('Path Setting', 'HOME_PATH');
 
-load(strcat(home, '\Synchronized_Dataset\statistics.mat'));
-load(strcat(home,'\Synchronized_Dataset\Video_Ten_Hz_signals_feature_Final.mat'));
+Output_Path = strcat(ini.GetValues('Global Path Setting', 'OUTPUT_PATH'), ...
+    '/', ini.GetValues('Driver Dataset Path', 'DATA_PATH'));
+
+load(strcat(Output_Path, '\Synchronized_Dataset\statistics.mat'));
+load(strcat(Output_Path,'\Synchronized_Dataset\Video_Ten_Hz_signals_feature_Final.mat'));
 
 time_before_Lane_Change = 20;
 lane_change_size          = 20;
@@ -99,7 +101,7 @@ for m = 1:num_trips
     end
 end
 
-Post_normalization_3_Output = strcat(home, '/Post_normalization_3_Output');
+Post_normalization_3_Output = strcat(Output_Path, '/Post_normalization_3_Output');
     mkdir_if_not_exist(Post_normalization_3_Output);
 save(strcat(Post_normalization_3_Output, '/Videos_events_feature.mat'), ...
     'Video_1_events_feature', 'Video_2_events_feature', ...

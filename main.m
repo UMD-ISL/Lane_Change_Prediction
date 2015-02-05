@@ -17,13 +17,17 @@ addpath(genpath('./'));
 % synchronization_1
 
 %%
-synchronization_2
+% synchronization_2
+ 
+%%
+% synchronization_3
 
 %%
-synchronization_3
+% signal_preprocessing
 
 %%
-signal_preprocessing
+% par_post_normalization_1
 
-%%
-post_normalization_1
+% post_normalization_2
+
+post_normalization_3

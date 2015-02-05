@@ -33,7 +33,9 @@
 clc; clear all; close all;
 ini = IniConfig();
 ini.ReadFile('configuration.ini');
-home = ini.GetValues('Path Setting', 'HOME_PATH');
+
+Output_Path = strcat(ini.GetValues('Global Path Setting', 'OUTPUT_PATH'), ...
+    '/', ini.GetValues('Driver Dataset Path', 'DATA_PATH'));
 
 total_feature = 5;
 
@@ -43,24 +45,24 @@ window_size_ECG_raw             = 256;
 % window size for BELT raw data is 26 because the sampling rate is 26 Hz
 window_size_BELT_raw            = 26;
 
-load(strcat(home, '\Synchronized_Dataset\statistics.mat'));
+load(strcat(Output_Path, '\Synchronized_Dataset\statistics.mat'));
 % get the number of signal selected
 % get the lane change number
 
 num_signal_attributes   = 5;
 
 for m = 1:num_trips
-    load(strcat(home, '\Post_normalization_Ouput\Video_', num2str(m), ...
+    load(strcat(Output_Path, '\Post_normalization_Ouput\Video_', num2str(m), ...
         '_Ten_Hz_signals_feature.mat'));
     % dynamic generate varibles using eval function
     % the value of feature_pool will change everytime the data is loaded
     eval(strcat('Ten_Hz_signals_feature_', num2str(m), ' = feature_pool;'));  
 
-    load(strcat(home, '\Post_normalization_Ouput\Video_', num2str(m), ...
+    load(strcat(Output_Path, '\Post_normalization_Ouput\Video_', num2str(m), ...
         '_ECG_feature.mat'));
     eval(strcat('ECG_feature_', num2str(m), ' = feature_pool;'));
 
-    load(strcat(home, '\Post_normalization_Ouput\Video_', num2str(m), ... 
+    load(strcat(Output_Path, '\Post_normalization_Ouput\Video_', num2str(m), ... 
         '_BELT_feature.mat'));
     eval(strcat('BELT_feature_', num2str(m), ' = feature_pool;'));
     
@@ -120,7 +122,7 @@ end
 
 %% add target information here
 for m = 1:num_trips
-    load(strcat(home,'\Synchronized_Dataset\Video_' ,num2str(m), '_Synchronized_Data.mat'));
+    load(strcat(Output_Path,'\Synchronized_Dataset\Video_' ,num2str(m), '_Synchronized_Data.mat'));
     for i = 1:num_selected_signal
         % add the target information to the end column
         % Ten_Hz_signals_feature_all: 7 signals, each signal has 7 columns (time + 5 features + target)
@@ -272,7 +274,7 @@ for m = 1:num_trips
     end
 end
 
-save(strcat(home,'\Synchronized_Dataset\Video_Ten_Hz_signals_feature_Final.mat'), ...
+save(strcat(Output_Path,'\Synchronized_Dataset\Video_Ten_Hz_signals_feature_Final.mat'), ...
     'Video_Ten_Hz_signals_feature_1', ...
     'Video_Ten_Hz_signals_feature_2', ...
     'Video_Ten_Hz_signals_feature_3', ...

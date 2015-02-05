@@ -33,15 +33,13 @@
 clc; clear all; close all;
 
 ini = IniConfig();
-ini.ReadFile('self_configuration.ini');
-
-Driver_name = 'Dev';
+ini.ReadFile('configuration.ini');
 
 Data_Path = strcat(ini.GetValues('Global Path Setting', 'DATA_PATH'), ...
-    '/', ini.GetValues(strcat(Driver_name, ' Dataset Path'), 'DATA_PATH'));
+    '/', ini.GetValues('Driver Dataset Path', 'DATA_PATH'));
 
 Output_Path = strcat(ini.GetValues('Global Path Setting', 'OUTPUT_PATH'), ...
-    '/', ini.GetValues(strcat(Driver_name, ' Dataset Path'), 'DATA_PATH'));
+    '/', ini.GetValues('Driver Dataset Path', 'DATA_PATH'));
 
 Video_signals = dir(strcat(Output_Path, '/synchronization_1_Output/*_Before_Denoised_Data.mat'));      % list all the .mat files
 [num_trips, ~] = size(Video_signals);        % find how many trips here
