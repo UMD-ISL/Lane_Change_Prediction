@@ -8,7 +8,7 @@ Video_signals = dir(strcat(synchronization_1_Output, '/*_Before_Denoised_Data.ma
 
 synchronization_2_Output = createOutputFolder(Output_Path, 'synchronization_2_Output');
     
-%% Combine signals from different Videos together
+%% Deniosing for each video signal
 for m = 1:size(Video_signals, 1)
     signal_file = strcat(synchronization_1_Output, '/Video_' ,num2str(m), '_Before_Denoised_Data.mat');
     load(signal_file);  % load data in each signal file

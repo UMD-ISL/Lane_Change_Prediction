@@ -23,7 +23,7 @@ for m=1:size(Video_signals,1)
     % using wavelet analysis method to find the trend
     wavelet_Levels = 6;          % levels for wavelet
     wavelet_Type = 'db3';        % the type of wavelet
-    baseline_HR = 80;           % this constant set beacause of the result of current medical research, can be change
+    baseline_HR = 80;            % this constant set beacause of the result of current medical research, can be change
 
     [c, l] = wavedec(Ecg_Data(:, 2), wavelet_Levels, wavelet_Type);    % wavelet decompose
     trend = wrcoef('a',c, l, wavelet_Type, wavelet_Levels);       % 'a' means approximation part / 'd' means detailed part
