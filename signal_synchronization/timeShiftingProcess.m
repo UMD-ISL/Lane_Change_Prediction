@@ -1,17 +1,16 @@
-function timeShiftingProcess(temp_file, Output_Path)
+function timeShiftingProcess(inputData, Output_Path, videoIndex)
 
-    load(temp_file);   % load temp data
-    load(strcat(Output_Path, '/', 'Start_time_reference.mat'));
+    foo = load(strcat(Output_Path, '/', 'Start_time_reference.mat'));
+    Start_time_reference = foo.Start_time_reference;
 
-    GSR_start_Time      = Start_time_reference{1, m};
-    ECG_start_Time      = Start_time_reference{2, m};
-    RSP_start_Time      = Start_time_reference{3, m};
-    OBD_start_Time      = Start_time_reference{4, m};
-    ECG_RAW_start_Time  = Start_time_reference{5, m};
-    GSR_RAW_start_Time  = Start_time_reference{6, m};
-    BELT_RAW_start_Time = Start_time_reference{7, m};
+    inputData.GSR_start_Time        = Start_time_reference{1, videoIndex};
+    inputData.ECG_start_Time        = Start_time_reference{2, videoIndex};
+    inputData.RSP_start_Time        = Start_time_reference{3, videoIndex};
+    inputData.ECG_RAW_start_Time    = Start_time_reference{4, videoIndex};
+    inputData.GSR_RAW_start_Time    = Start_time_reference{5, videoIndex};
+    inputData.BELT_RAW_start_Time   = Start_time_reference{6, videoIndex};
     
-    Rsp_Data(:,1)       = Rsp_Data(1:end,1) - Rsp_Data(1,1);
+    inputData.Rsp_Data(:,1) = inputData.Rsp_Data(1:end,1) - inputData.Rsp_Data(1,1);
     % delete date information, only reserve hour, minute, second
     % information
     Rsp_Data(:,1)       = Rsp_Data(:,1) + datenum(RSP_start_Time) ...
@@ -35,9 +34,4 @@ function timeShiftingProcess(temp_file, Output_Path)
     BELT_RAW_Data(:, 2)  = BELT_RAW_Data(1:end, 1) - BELT_RAW_Data(1, 1);
     BELT_RAW_Data(:, 2)  = BELT_RAW_Data(:, 1) + datenum(BELT_RAW_start_Time) ...
                             - floor(datenum(BELT_RAW_start_Time));
-    
-    save(temp_file, ...   % save temp data
-        'Rsp_Data', 'Gsr_Data', 'Ecg_Data', 'Text_Index', ...
-        'GSR_RAW_Data', 'ECG_RAW_Data', 'BELT_RAW_Data', ...
-        'target_Data', 'm');
 end

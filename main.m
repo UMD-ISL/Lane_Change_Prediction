@@ -3,7 +3,7 @@ clear all; clc; close all;
 addpath(genpath('./'));
 
 %%
-% start_time_generate;
+start_time_generate;
 % try
 %     parpool
 %     tic;
@@ -14,7 +14,9 @@ addpath(genpath('./'));
 % end
 
 %% synchronization
-% synchronization_1
+tic;
+synchronization_1
+toc;
 
 %%
 % synchronization_2

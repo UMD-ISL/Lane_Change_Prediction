@@ -4,15 +4,18 @@ clc; clear all;
 
 % make the folder where to save the output data
 synchronization_1_Output = strcat(Output_Path, '/synchronization_1_Output');
-Video_signals = dir(strcat(synchronization_1_Output, '/*_Before_Denoised_Data.mat'));      % list all the .mat files
+numVideos = dir(strcat(synchronization_1_Output, '/*_Before_Denoised_Data.mat'));      % list all the .mat files
 
 synchronization_2_Output = createOutputFolder(Output_Path, 'synchronization_2_Output');
     
 %% Deniosing for each video signal
-for m = 1:size(Video_signals, 1)
-    signal_file = strcat(synchronization_1_Output, '/Video_' ,num2str(m), '_Before_Denoised_Data.mat');
-    load(signal_file);  % load data in each signal file
+for videoIndex = 1:size(numVideos, 1)
+    %%
+    signal_file = strcat(synchronization_1_Output, '/Video_' ,num2str(videoIndex), '_Before_Denoised_Data.mat');
+    foo = load(signal_file);  % load data in each signal file
+    synBefDenoisedData = foo.synBefDenoisedData;
     
+    %%
     % help diff: diff Difference and approximate derivative.
     diff_Ecg_HR         = diff(Ecg_Data(:, 2));     % first version of HR data.
                                                     % second column of Ecg_Data is 'HR' data, only use the difference value
@@ -23,6 +26,7 @@ for m = 1:size(Video_signals, 1)
     Ecg_Data_RR_New     = Ecg_Data(:, [1, 3]);      % second version of RR data. Use original data.
     ECG_RAW_Data_New    = ECG_RAW_Data;             % second version of ECG raw data. Use original data.
     
+    %%
     % deal with HR signal
     i = 1;
     % helnumel function return the number of elements in an array
@@ -50,6 +54,7 @@ for m = 1:size(Video_signals, 1)
         i = i + 1;
     end
     
+    %%
     % deal with RR signal
     i = 1;
     while i < numel(diff_Ecg_RR)
@@ -76,6 +81,7 @@ for m = 1:size(Video_signals, 1)
         i = i + 1;
     end
     
+    %%
     % deal with ECG_RAW data
     i = 1;
     while i < numel(diff_Ecg_Raw)
@@ -96,5 +102,5 @@ for m = 1:size(Video_signals, 1)
     end
     
     % save the processed data
-    save(strcat(synchronization_2_Output, '/Video_', num2str(m), '_After_Denoised_Data.mat'),'Ecg_Data_HR_New', 'diff_Ecg_HR', 'Ecg_Data_RR_New', 'diff_Ecg_RR');
+    save(strcat(synchronization_2_Output, '/Video_', num2str(videoIndex), '_After_Denoised_Data.mat'),'Ecg_Data_HR_New', 'diff_Ecg_HR', 'Ecg_Data_RR_New', 'diff_Ecg_RR');
 end
