@@ -1,8 +1,9 @@
-function [Data_Path, Output_Path] = loadGlobalPathSetting()
+function [Home_Path, Data_Path, Output_Path] = loadGlobalPathSetting()
 
     ini = IniConfig();
     ini.ReadFile('configuration.ini');
 
+    Home_Path = ini.GetValues('Global Path Setting', 'HOME_PATH');
     Data_Path = strcat(ini.GetValues('Global Path Setting', 'DATA_PATH'), ...
     '/', ini.GetValues('Driver Dataset Path', 'DATA_PATH'));
 
