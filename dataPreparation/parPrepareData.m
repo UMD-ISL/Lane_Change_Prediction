@@ -33,7 +33,7 @@ function parPrepareData()
     end
     
     tic;
-    for i = 1:size(recordDataPathList, 2)
+    parfor i = 1:size(recordDataPathList, 2)
         fprintf('start analysising record files: %d\n', i);
         recordDataPath = cell2mat(recordDataPathList(1, i));
         [prepedGSR, prepedECG, prepedRSP, prepedGSRraw, prepedECGraw, ...

@@ -1,0 +1,27 @@
+Get information of Dataset
+Total number of record file collections is: 5
+Malloc memory size to store start info
+start analysising record files: 3
+start saving record files: 3
+start analysising record files: 4
+start saving record files: 4
+start analysising record files: 2
+start saving record files: 2
+start analysising record files: 1
+start saving record files: 1
+start analysising record files: 5
+start saving record files: 5
+Finished saving record files 4
+Finished analysising record files: 4
+Finished saving record files 3
+Finished saving record files 2
+Finished analysising record files: 3
+Finished analysising record files: 2
+Finished saving record files 5
+Finished analysising record files: 5
+Finished saving record files 1
+Finished analysising record files: 1
+Elapsed time is 59.460656 seconds.
+save start time reference table
+Program finished
+Parallel pool using the 'local' profile is shutting down.
