@@ -5,7 +5,7 @@
 
 
 #### Description
-This project want to predict driver's lane change envent in advanced using drivers' physiological signal feature.
+This project want to predict driver's lane change event in advanced using drivers' physiological signal feature.
 
 #### Dataset
 Dataset is forbidden to share on the Github.
