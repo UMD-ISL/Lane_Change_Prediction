@@ -2,7 +2,8 @@ function prepareData()
     %% Initialization and Configuration
     clear all; clc;
     
-    [homePath, dataRootPath, outputPath] = loadGlobalPathSetting();
+    configFile = '../preamble/configuration.ini';
+    [homePath, dataRootPath, outputPath] = loadGlobalPathSetting(configFile);
     addpath(genpath(homePath)); % only for debug
     
     mkdir_if_not_exist(outputPath);
@@ -26,17 +27,17 @@ function prepareData()
     %%
     recordDataPathList = strcat(dataRootPath, '/', nameRecordData);
 
-    try
-        parpool;
-    catch ME
-    end
+%     try
+%         parpool;
+%     catch ME
+%     end
     
     tic;
-    parfor i = 1:size(recordDataPathList, 2)
+    for i = 1:size(recordDataPathList, 2)
         fprintf('start analysising record files: %d\n', i);
         recordDataPath = cell2mat(recordDataPathList(1, i));
         [prepedGSR, prepedECG, prepedRSP, prepedGSRraw, prepedECGraw, ...
-            prepedRSPraw, prepedOBD] = analysisRecordFiles(recordDataPath, ...
+            prepedRSPraw, prepedOBD, prepedTarget] = analysisRecordFiles(recordDataPath, ...
                                                             signalVector);
         tableStartTime(i, :) = {prepedGSR.startTime, prepedECG.startTime, ...
                                 prepedRSP.startTime, prepedGSRraw.startTime, ...
@@ -48,7 +49,7 @@ function prepareData()
         savefile = strcat(dataPreparationOutput, '/prepedData_', cell2mat(nameRecordData(1, i)), '.mat');
         parsave(savefile, prepedGSR, prepedECG, prepedRSP, ...
                         prepedGSRraw, prepedECGraw, ...
-                        prepedRSPraw, prepedOBD);
+                        prepedRSPraw, prepedOBD, prepedTarget);
         
         fprintf('Finished saving record files %d\n', i);
         fprintf('Finished analysising record files: %d\n', i);
@@ -60,5 +61,5 @@ function prepareData()
     save(saveTablefile, 'tableStartTime');
     disp('Program finished');
     
-    delete(gcp);
+%     delete(gcp);
 end
