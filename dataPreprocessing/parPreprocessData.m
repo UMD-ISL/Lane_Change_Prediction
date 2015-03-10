@@ -3,7 +3,7 @@ function parDataPreprocessing()
     clear all; clc;     % Clear environment, and start counting running time
     
     configFile = '../preamble/configuration.ini';
-    [homePath, dataRootPath, outputPath] = loadGlobalPathSetting(configFile);
+    [~, ~, outputPath] = loadGlobalPathSetting(configFile);
     
     dataPreprocessOutput = createOutputFolder(outputPath, 'dataPreprocessOutput');
     
@@ -27,12 +27,6 @@ function parDataPreprocessing()
                     num2str(labindex), '.mat');
                 
         convertDataFormat(bar, savefile);
-        
-        %%
-        % first ignore the time duration column
-        
-        % second translate all the physiological data into double (if need
-        % trip start date, please look into OBD data.)
     end
     toc;
     
@@ -54,5 +48,4 @@ function parDataPreprocessing()
     end
     savefile = strcat(dataPreprocessOutput, '/numEndTimeTable.mat');
     save(savefile, 'numEndTimeTable');
-    % convert time table
 end
