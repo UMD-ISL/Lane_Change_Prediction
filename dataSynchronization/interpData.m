@@ -1,8 +1,13 @@
 function interpData(barData, comStartTime, comEndTime, savefile)
-    tic;
     DeltaT = datenum('3 Sep 2014 17:00:00.100') - ...
                 datenum('3 Sep 2014 17:00:00.000');
+    sampFreq = 10;
     timeStampVector = (comStartTime:DeltaT:comEndTime)';
+    lenEventWindow = 2 * sampFreq;  % 2 seconds * smapling frequency
+    
+    %% ============= synchronize the target data =============
+    Target = barData.preprocTarget;
+    syncTarget = syncronizeTarget(Target, timeStampVector, lenEventWindow);
     
     %% ========= upsampling data to 10 Hz =================
     GSR = barData.preprocGSR;
@@ -36,7 +41,7 @@ function interpData(barData, comStartTime, comEndTime, savefile)
                     & RSPraw.data(:, 1) <= comEndTime, :);
     syncRSPraw = downSamplingSigs(timeStampVector, RSPraw);
     
+    %% ========= save output file ==============================
     save(savefile, 'syncGSR', 'syncECG', 'syncRSP', 'syncGSRraw', ...
-                'syncECGraw', 'syncRSPraw');
-    toc;
+                'syncECGraw', 'syncRSPraw', 'syncTarget');
 end

@@ -2,7 +2,7 @@ function synchronizeData()
     clear all; clc;     % Clear environment, and start counting running time
     
     configFile = '../preamble/configuration.ini';
-    [homePath, dataRootPath, outputPath] = loadGlobalPathSetting(configFile);
+    [~, ~, outputPath] = loadGlobalPathSetting(configFile);
     
     dataSynchronizationOutput = createOutputFolder(outputPath, 'dataSynchronizationOutput');
     
@@ -21,8 +21,8 @@ function synchronizeData()
     numEndTimeTable = bar.numEndTimeTable;
     
     tic;
-    for i = 5:numPreprocDataFiles
-        fprintf('load prprocess data file collection: %d\n', labindex);
+    for i = 1:numPreprocDataFiles
+        fprintf('load prprocess data file collection: %d\n', i);
         
         comStartTime = max(numStartTimeTable(i, :));
         fprintf(datestr(comStartTime, 'mm/dd/yyyy HH:MM:SS.FFF\n'));
@@ -30,10 +30,10 @@ function synchronizeData()
         fprintf(datestr(comEndTime, 'mm/dd/yyyy HH:MM:SS.FFF\n'));
         
         savefile = strcat(dataSynchronizationOutput, '/synchronizedData_', ...
-                    preprocDataFilesName{1, labindex}, '.mat');
+                    num2str(i), '.mat');
         PreprocDataFilePath = strcat(outputPath, '/dataPreprocessOutput/', ...
-            preprocDataFilesName{1, labindex});
-        barData = load(PreprocDataFilePath);    
+            preprocDataFilesName{1, i});
+        barData = load(PreprocDataFilePath);
         
         interpData(barData, comStartTime, comEndTime, savefile);
     end

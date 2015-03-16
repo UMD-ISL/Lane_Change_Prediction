@@ -25,14 +25,8 @@ function prepareData()
     startTimeTable = cell(numRecordData, numSignal);
     endTimeTable = cell(numRecordData, numSignal);
     
-
     %%
     recordDataPathList = strcat(dataRootPath, '/', nameRecordData);
-
-%     try
-%         parpool;
-%     catch ME
-%     end
     
     tic;
     for i = 1:size(recordDataPathList, 2)
@@ -58,13 +52,7 @@ function prepareData()
                                 prepedECGraw.endTime, prepedRSPraw.endTime, ...
                                 prepedOBD.endTime});
         
-        % extract labeling result
-        % we may need offset of video starting time and OBD start time here
-        % to postalign these two signals
-        
-        vidOBDoffset = 0;
-        prepedTarget = extractLabellingResult(recordDataPath, ...
-                                        vidOBDoffset, prepedOBD.startDate);
+        prepedTarget = extractLabellingResult(recordDataPath);
         
         fprintf('start saving record files: %d\n', i);
         
@@ -87,6 +75,4 @@ function prepareData()
     save(savefile, 'endTimeTable');
     
     disp('Program finished');
-    
-%     delete(gcp);
 end

@@ -1,8 +1,7 @@
 function OBD = extractOBDinfo(OBD_filepath)
     fid = fopen(OBD_filepath);
     OBD.dataRate = 100;
-    OBD.startDate = getOBDstartDate(fid);
-    OBD.startTime = getOBDstartTime(fid);
+    [OBD.startDate, OBD.startTime] = getOBDstartDateTime(fid);
     OBD.initLocation = getOBDinitLocation(fid);
     headerString = fgetl(fid);
     OBD.params = getSigParamsHeader(headerString);

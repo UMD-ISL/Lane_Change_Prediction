@@ -1,5 +1,4 @@
-function target = extractLabellingResult(recordDataPath, vidOBDoffset, ...
-                                       OBDstartDate)
+function target = extractLabellingResult(recordDataPath)
     labelingFile = cell2mat(strcat(cellstr(recordDataPath), '/target', '.csv'));
     fid = fopen(labelingFile);
     headerString = fgetl(fid);
