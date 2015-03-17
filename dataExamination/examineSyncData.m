@@ -1,4 +1,4 @@
-function examineData()
+function examineSyncData()
     clear all; clc;     % Clear environment, and start counting running time
     close all;
     

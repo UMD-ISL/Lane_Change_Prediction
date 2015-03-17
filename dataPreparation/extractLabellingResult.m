@@ -3,7 +3,7 @@ function target = extractLabellingResult(recordDataPath)
     fid = fopen(labelingFile);
     headerString = fgetl(fid);
     labeling.params = getSigParamsHeader(headerString);
-    target.Params = {'TimeStart', 'LaneChange'};
-    target.data = getLabelingdata(target.Params, labeling.params, fid);
+    target.params = {'TimeStart', 'LaneChange'};
+    target.data = getLabelingdata(target.params, labeling.params, fid);
     fclose(fid);
 end
