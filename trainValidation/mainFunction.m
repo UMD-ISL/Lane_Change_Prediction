@@ -18,8 +18,9 @@ function mainFunction()
     trainingSampleRatio = 7/10; testingSampleRatio = 3/10;
     numCVfolder = 10;
     
-    numPosTestingEvents = floor(size(LCeventList, 1) * trainingSampleRatio);
-    numPosValidateEvents = ceil(size(LCeventList, 1)); 
+    numPosTestingEvents = floor(size(LCeventList, 1) * testingSampleRatio);
+    numPosValidateEvents = ceil(size(LCeventList, 1) * trainingSampleRatio ...
+                            * 1/numCVfolder); 
     
     %% =====================
 end

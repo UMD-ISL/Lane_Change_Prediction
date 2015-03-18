@@ -1,4 +1,4 @@
-function parDataPreprocessing()
+function parPreprocessData()
     
     clear all; clc;     % Clear environment, and start counting running time
     
