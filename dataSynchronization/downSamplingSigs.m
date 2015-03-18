@@ -18,8 +18,6 @@ function sigDataOut = downSamplingSigs(timeStampVector, sigDataIn)
                             timeStampVector(i, 1));
         [location, ~] = find( temp <= 0 & temp > -DeltaT );
         if isempty(location)
-            disp('error');
-            disp(i);
             sigDataOut.data(i, 2:end) = sigDataIn.data(1, 2:end);       
         else
             sigDataOut.data(i, 2:end) = mean(sigDataIn.data(location, 2:end)); 
