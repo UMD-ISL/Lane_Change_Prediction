@@ -1,12 +1,13 @@
-function [nn] = NNBuilder2(trainingInput, trainingTarget, testingInput, testingTarget, netConfig)
+function [nn, trPerf] = NNBuilder5(trainingInput, trainingTarget, testingInput, testingTarget, netConfig)
     nn.trainNN=@trainNN;                                
 %     rand('seed',77);
     %try 20 times and choose NN with best performance;
     minResult=Inf;
-    for i=1:20
+    for i=1:5
         % net = feedforwardnet(netConfig.hidNodes, 'trainlm');
-        net = newff(trainingInput, trainingTarget, netConfig.hidNodes, {'logsig','purelin'}, 'trainscg');
-        net.trainParam.epochs=2000;
+        net = newff(trainingInput, trainingTarget, netConfig.hidNodes, ...
+            {'tansig','tansig'}, 'trainscg');
+        net.trainParam.epochs=5000000;
         net.trainParam.goal = netConfig.goal;
         net.trainParam.lr = netConfig.lr;
         net.trainParam.show = NaN;
@@ -23,13 +24,14 @@ function [nn] = NNBuilder2(trainingInput, trainingTarget, testingInput, testingT
              OutputflagTs=[];
 			for i_ts=1:flag_length                                       %if training output is over 0.5 regard as class 1
 			                                                             %if training output is less than 0.5 regard as class 0
-			      if(testingOutput(1,i_ts)>=0.5)
+			      if(testingOutput(1,i_ts)>0.5)
 				   OutputflagTs(i_ts)=1;
 				   
 				 else
 				 OutputflagTs(i_ts)=0;
                   end
-			end
+            end
+            
         testingErrorAll = (OutputflagTs-testingTarget);                    %testing output 1?0?
         testingError = testingErrorAll(abs(testingErrorAll)>0.1);           % what value should be better.
         testingCnt = size(testingInput,2);

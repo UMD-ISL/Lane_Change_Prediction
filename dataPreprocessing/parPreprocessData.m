@@ -1,5 +1,4 @@
 function parPreprocessData()
-    
     clear all; clc;     % Clear environment, and start counting running time
     
     configFile = '../preamble/configuration.ini';
@@ -18,7 +17,7 @@ function parPreprocessData()
     %% =============== part 1 =====================
     tic;
     spmd (numPrepedDataFiles)
-        fprintf('load prpred data file collection: %d\n', labindex);
+        fprintf('load prepred data file collection: %d\n', labindex);
         PrepedDataFilePath = strcat(outputPath, '/dataPreparationOutput/', ...
             prepedDataFilesName{1, labindex});
         

@@ -29,7 +29,7 @@ function parSynchronizeData()
     %% ======== use spmd to paralleling process data ======================
     tic;    % start counting time
     spmd (numCleanedDataFiles)
-        fprintf('load prprocess data file collection: %d\n', labindex);
+        fprintf('load preprocess data file collection: %d\n', labindex);
         
         comStartTime = max(numStartTimeTable(labindex, :));
         fprintf(datestr(comStartTime, 'mm/dd/yyyy HH:MM:SS.FFF\n'));
