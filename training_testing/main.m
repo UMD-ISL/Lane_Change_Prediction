@@ -13,8 +13,7 @@ function main()
 
     % Set up Division of Data for Training, Validation, Testing
     testRatio = 15/100;
-    trainValRatio = 1 - testRatio;
-
+ 
     numTestLCevents = round(testRatio * numLCevents);
     testLCidx = randsample(size(LCeventList,1), numTestLCevents, false); % without replacement
     testLCevents = LCeventList(testLCidx, :);
