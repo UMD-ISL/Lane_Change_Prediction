@@ -1,7 +1,9 @@
 function cleanData()
-    clear -except procDatasetStruct; clc;     % Clear environment, and start counting running time
+    clear all; clc;     % Clear environment, and start counting running time
     close all;
+    addpath(genpath('../utility/'));
     
+    %%
     configFile = '../preamble/configuration.ini';
     [~, ~, outputPath] = loadGlobalPathSetting(configFile);
     

@@ -1,7 +1,7 @@
-function [Home_Path, Data_Path, Output_Path] = loadGlobalPathSetting()
+function [Home_Path, Data_Path, Output_Path] = loadGlobalPathSetting(configFile)
 
     ini = IniConfig();
-    ini.ReadFile('configuration.ini');
+    ini.ReadFile(configFile);
 
     Home_Path = ini.GetValues('Global Path Setting', 'HOME_PATH');
     Data_Path = strcat(ini.GetValues('Global Path Setting', 'DATA_PATH'), ...

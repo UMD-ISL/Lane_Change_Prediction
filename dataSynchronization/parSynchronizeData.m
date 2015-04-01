@@ -1,5 +1,8 @@
 function parSynchronizeData()
+    
+    %%
     clear all; clc;     % Clear environment, and start counting running time
+    addpath(genpath('../utility/'));
     
     %% ================ read configuration file ===========================
     configFile = '../preamble/configuration.ini';

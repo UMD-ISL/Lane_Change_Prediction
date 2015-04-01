@@ -1,7 +1,10 @@
 function main()
+    
     clc, clear all;
     close all;
+    addpath(genpath('../utility/'));
     
+    %%
     load('LCeventList.mat');
     load('NLCeventList.mat');
     

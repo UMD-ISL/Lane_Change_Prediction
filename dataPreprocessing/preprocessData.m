@@ -1,7 +1,9 @@
 function preprocessData()
     
     clear all; clc;     % Clear environment, and start counting running time
+    addpath(genpath('../utility/'));
     
+    %%
     configFile = '../preamble/configuration.ini';
     [~, ~, outputPath] = loadGlobalPathSetting(configFile);
         
