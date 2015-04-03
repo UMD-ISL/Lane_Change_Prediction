@@ -1,1 +1,1 @@
-ConfigurationFileGeneartion.exe -data D:/Programming/Test/Dataset/dataset_Lane_Change_Prediction -output D:/Programming/Test/Output/output_Lane_Change_Prediction -driver ID8_kunqiao
+ConfigurationFileGeneartion.exe -home D:/Programming/Github/Lane_Change_Prediction -data D:/Programming/Dataset/dataset_Lane_Change_Prediction -output D:/Programming/Output/output_Lane_Change_Prediction -driver ID8_kunqiao
