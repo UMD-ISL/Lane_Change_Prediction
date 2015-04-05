@@ -60,7 +60,7 @@ function main()
         % Test the Network
         valOutputs = net(valInputs);
         errors = gsubtract(valTargets, valOutputs);
-        performance = perform(net, valTargets, valOutputs)
+        performance = perform(net, valTargets, valOutputs);
 %         figure, plotperform(tr)
 %         figure, plottrainstate(tr);
         figure;
