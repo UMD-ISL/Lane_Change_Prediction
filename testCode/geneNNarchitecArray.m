@@ -1,6 +1,6 @@
 function NNarchitecArray = geneNNarchitecArray()
 
-    configParams.hiddenLayerSize    = [3 5 10 15 20];
+    configParams.hiddenLayerSize    = [3 5 10 12];
     
     % Minimum performance gradient
     configParams.min_grad           = 1e-5;
@@ -9,11 +9,11 @@ function NNarchitecArray = geneNNarchitecArray()
     % Performance goal
     configParams.goal               = 0;
     % Learning rate
-    configParams.lr                 = [0.01, 0.05, 0.1 0.2 0.5 1 2 5 10];
+    configParams.lr                 = [0.01, 0.05, 0.1 0.2 0.5 1];
     % Regularization
-    configParams.regularization     = [0 0.1 0.5 1 5 10];
+    configParams.regularization     = [0 0.1 0.2 0.5 0.8 1];
     % Momentum constant
-    configParams.mc                 = [0 0.1 0.2 0.5 1 2];
+    configParams.mc                 = [0 0.1 0.2 0.5 1];
     
     
     NNarchitecArray = combvec(configParams.hiddenLayerSize, ...
