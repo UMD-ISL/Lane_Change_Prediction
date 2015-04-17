@@ -1,64 +1,41 @@
-function preprocessData()
-    
+function parPreprocessData()
     clear all; clc;     % Clear environment, and start counting running time
     addpath(genpath('../utility/'));
     
-    %%
     configFile = '../preamble/configuration.ini';
     [~, ~, outputPath] = loadGlobalPathSetting(configFile);
-        
+    
+    dataPreprocessOutput = createOutputFolder(outputPath, 'dataPreprocessOutput');
+    
     folderFiles = dir(strcat(outputPath, '/dataPreparationOutput'));
     folderFilesName = {folderFiles.name};
     
+    % use regular expression to select the target files
     expression = 'prepedData_*';
     DataFileIndex = ~cellfun(@isempty, (regexpi(folderFilesName,expression)));
     prepedDataFilesName = folderFilesName(DataFileIndex);
     numPrepedDataFiles = size(prepedDataFilesName, 2);
-
-    %% ========= start processing each physiological data ============
-    for i = 1:numPrepedDataFiles
-        fprintf('load prpred data file collection: %d\n', i);
+        
+    %% ============== Convert cell matrix to double matrix ================
+    tic;
+    for i = 1 : numPrepedDataFiles
+        fprintf('load prepred data file collection: %s\n', ...
+                    prepedDataFilesName{1, i});
         PrepedDataFilePath = strcat(outputPath, '/dataPreparationOutput/', ...
             prepedDataFilesName{1, i});
         
-        load(PrepedDataFilePath);
-        recordDate = prepedOBD.startDate;
-        absoluteTime = datenum([recordDate, ' ', prepedOBD.startTime]);
-        timeDelay = 0.000;
-        vidStartTime = absoluteTime + timeDelay / 86400;
+        bar = load(PrepedDataFilePath);
         
-        preprocTarget.data = zeros(size(prepedTarget.data));
-        for j = 1:size(prepedTarget.data, 1)
-            preprocTarget.data(j, 1) = vidStartTime + ...
-                        datenum([recordDate, ' ', prepedTarget.data{j, 1}]) - ...
-                        datenum([recordDate, ' ', '00:00:00.000']);
-        end
-        preprocTarget.data(:, 2) = str2double(prepedTarget.data(:, 2));
+        [~, name, ~] = fileparts(PrepedDataFilePath);
+        expression = '_';
+        splitStr = regexp(name, expression,'split');
+        savefile = strcat(dataPreprocessOutput, '/', ...
+                        strrep(name, splitStr{1}, 'preprocData'), '.mat');
         
-        %%
-        [prepedGSR.params, prepedGSR.data] = strcell2number(prepedGSR.params, ...
-                                                prepedGSR.data, recordDate);
-        
-        [prepedECG.params, prepedECG.data] = strcell2number(prepedECG.params, ...
-                                                prepedECG.data, recordDate);
-        
-        [emptyLocationX, emptyLocationY] = find(ismember(prepedRSP.data, '')==1);
-        prepedRSP.data(emptyLocationX, emptyLocationY) = cellstr('NaN');
-        
-        [prepedRSP.params, prepedRSP.data] = strcell2number(prepedRSP.params, ...
-                                                prepedRSP.data, recordDate);
-                                            
-        [prepedGSRraw.params, prepedGSRraw.data] = strcell2number(prepedGSRraw.params, ...
-                                                prepedGSRraw.data, recordDate);
-        
-        [prepedECGraw.params, prepedECGraw.data] = strcell2number(prepedECGraw.params, ...
-                                                prepedECGraw.data, recordDate);
-
-        [prepedRSPraw.params, prepedRSPraw.data] = strcell2number(prepedRSPraw.params, ...
-                                                prepedRSPraw.data, recordDate);
-                                            
-
+        % self-designed function: convertDataFormat.m
+        convertDataFormat(bar, savefile);
     end
+    toc;
     
     %% =============== Part 2 =====================
     bar = load(strcat(outputPath, '/dataPreparationOutput/startTimeTable.mat'));

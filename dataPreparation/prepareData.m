@@ -38,7 +38,7 @@ function prepareData()
     
     tic;
     for i = 1:size(recordDataPathList, 2)
-        fprintf('start analysising record files: %d\n', i);
+        fprintf('start analysising record files: %s\n', nameRecordData{1, i});
         recordDataPath = cell2mat(recordDataPathList(1, i));
         
         % analysis OBD date first to extract video record date information
@@ -62,15 +62,15 @@ function prepareData()
         
         prepedTarget = extractLabellingResult(recordDataPath);
         
-        fprintf('start saving record files: %d\n', i);
-        
-        savefile = strcat(dataPreparationOutput, '/prepedData_', cell2mat(nameRecordData(1, i)), '.mat');
+        savefile = strcat(dataPreparationOutput, '/prepedData_', ...
+                                cell2mat(nameRecordData(1, i)), '.mat');
+        fprintf('start saving record files: %s\n', savefile);
         parsave(savefile, prepedGSR, prepedECG, prepedRSP, ...
                         prepedGSRraw, prepedECGraw, ...
                         prepedRSPraw, prepedOBD, prepedTarget);
         
-        fprintf('Finished saving record files %d\n', i);
-        fprintf('Finished analysising record files: %d\n', i);
+        fprintf('Finished saving record files %s\n', savefile);
+        fprintf('Finished analysising record files: %s\n', savefile);
     end
     toc;
     

@@ -1,6 +1,5 @@
 function synchronizeData()
-    
-
+    %% preamble
     clear all; clc;     % Clear environment, and start counting running time
     addpath(genpath('../utility/'));
     
@@ -27,19 +26,26 @@ function synchronizeData()
     
     tic;
     for i = 1:numCleanedDataFiles
-        fprintf('load prprocess data file collection: %d\n', i);
         
+        cleanedDataFilePath = strcat(outputPath, '/dataCleanOutput/', ...
+            cleanedDataFilesName{1, i});
+        
+        [~, name, ~] = fileparts(cleanedDataFilePath);
+        expression = '_';
+        splitStr = regexp(name, expression,'split');
+        savefile = strcat(dataSynchronizationOutput, '/', ...
+                        strrep(name, splitStr{1}, 'synchronizedData'), '.mat');
+        
+        fprintf('load cleaned data file collection: %s\n', name);
+                
         comStartTime = max(numStartTimeTable(i, :));
         fprintf(datestr(comStartTime, 'mm/dd/yyyy HH:MM:SS.FFF\n'));
         comEndTime = min(numEndTimeTable(i, :));
         fprintf(datestr(comEndTime, 'mm/dd/yyyy HH:MM:SS.FFF\n'));
-        
-        savefile = strcat(dataSynchronizationOutput, '/synchronizedData_', ...
-                    num2str(i), '.mat');
-        cleanedDataFilePath = strcat(outputPath, '/dataCleanOutput/', ...
-            cleanedDataFilesName{1, i});
+
         barData = load(cleanedDataFilePath);
         
+        %% ========== core function: interpolate data into 10 Hz ==========
         interpData(barData, comStartTime, comEndTime, savefile);
     end
     toc;

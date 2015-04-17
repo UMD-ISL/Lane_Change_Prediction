@@ -1,18 +1,20 @@
 function main()
     
-    clc, clear all; close all;
-    
+    clear all; clc;   % Clear environment, and start counting running time
     addpath(genpath('../utility/'));
-    rand('twister', 5489);
-    
-    try
-        delete('outfile.txt');
-    catch ME
-    end
     
     %%
-    load('LCeventList.mat');
-    load('NLCeventList.mat');
+    configFile = '../preamble/configuration.ini';
+    [~, ~, outputPath] = loadGlobalPathSetting(configFile);
+    
+    eventTrainTestOutput = createOutputFolder(outputPath, ...
+                                            'eventTrainTestOutput');
+    
+    load(strcat(outputPath, '/TrainingsetOutput/LCeventList.mat'));
+    load(strcat(outputPath, '/TrainingsetOutput/NLCeventList.mat'));
+    
+    %%
+    rand('twister', 5489);  % restore to system default value
     
     numLCevents = size(LCeventList, 1);
     numNLCevents = size(NLCeventList, 1);
@@ -24,11 +26,11 @@ function main()
     testRatio = 15/100;
     rand('twister', sum(100*clock));
     numTestLCevents = round(testRatio * numLCevents);
-    testLCidx = randsample(size(LCeventList,1), numTestLCevents, false); % without replacement
+    testLCidx = randsample(size(LCeventList,1), numTestLCevents, false);
     testLCevents = LCeventList(testLCidx, :);
     
     numTestNLCevents = round(testRatio * numNLCevents);
-    testNLCidx = randsample(size(NLCeventList,1), numTestNLCevents, false); % without replacement
+    testNLCidx = randsample(size(NLCeventList,1), numTestNLCevents, false);
     testNLCevents = NLCeventList(testNLCidx, :);
     
     testEventList = [testLCevents; testNLCevents];
@@ -42,14 +44,21 @@ function main()
     [testInputs, testTargets] = genDataTarget(testEventList);
     
     fgSelectModel = 0;
-    %% Start model selection
-    %% start k-folder cross-validation
     
     if fgSelectModel
-        %%
+        %% Start model selection
+        rmdir(strcat(eventTrainTestOutput, '/LogFolder'));                                    
+        eventTrainTestLogFolder = createOutputFolder(eventTrainTestOutput, ...
+                                    '/LogFolder');  
+                                
+        % Generate Neural network architecture array
         NNarchitecArray     = geneNNarchitecArray();
-        LCindices = crossvalind('Kfold', size(trainValLCevents, 1), numValFolder);
-        NLCindices = crossvalind('Kfold', size(trainValNLCevents, 1), numValFolder);
+        
+        %% start k-folder cross-validation
+        LCindices = crossvalind('Kfold', size(trainValLCevents, 1), ...
+                                numValFolder);
+        NLCindices = crossvalind('Kfold', size(trainValNLCevents, 1), ...
+                                numValFolder);
         numValFolder = 10;
         
         diary off;
@@ -75,7 +84,7 @@ function main()
                                 numValFolder);
 
             disp(logStatis{1});
-            fprintf('****************************************************\n\n');
+            fprintf('***********************************************\n\n');
 
             NNresultLogArray(NNlogInd).net = net;
             NNresultLogArray(NNlogInd).tr  = tr;
@@ -87,13 +96,13 @@ function main()
                                 size(NNarchitecArray, 1) == i;
             if flgSaveOutput
                 diary off;
-                save(strcat('./logFolder/TrainingResult_', ...
-                        num2str(outputFileInd), '.mat'), 'NNresultLogArray');
+                save(strcat(eventTrainTestLogFolder, '/TrainingResult_',...
+                    num2str(outputFileInd), '.mat'), 'NNresultLogArray');
 
                 if i ~= size(NNarchitecArray, 1)
                     outputFileInd = outputFileInd + 1;
-                    diary(strcat('./logFolder/diary_', num2str(outputFileInd), ...
-                        '.txt'));
+                    diary(strcat(eventTrainTestLogFolder, '/diary_', ...
+                            num2str(outputFileInd), '.txt'));
                 end
             end
         end
@@ -126,15 +135,12 @@ function main()
     statis.Fscore      =  2 * numTPpoints / (2 * numTPpoints + ...
                                     numFPpoints + numFNpoints);
 
-    statis.c             = c;
-    statis.cm            = cm;
-    statis.ind           = ind;
-    statis.per           = per;
-    statis.net           = net;
-    statis.tr            = tr; 
+    statis.c             = c;       statis.cm            = cm;
+    statis.ind           = ind;     statis.per           = per;
+    statis.net           = net;     statis.tr            = tr; 
     
     plotconfusion(trainValTargets, trainValOutputs, 'training', ...
                 testTargets, testOutputs, 'testing');
     
-    save('testingResult.mat', 'statis');
+    save(strcat(eventTrainTestOutput, '/testingResult.mat'), 'statis');
 end

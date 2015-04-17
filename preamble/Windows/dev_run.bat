@@ -1,1 +1,1 @@
-ConfigurationFileGeneartion.exe -home R:/Programming/Matlab/Lane_Change_Prediction -data F:/CloudStation/@laboratory/Dataset/dataset_Lane_Change_Prediction -output R:/Programming/output/output_Lane_Change_Prediction -driver ID13_dev
+ConfigurationFileGeneartion.exe -home D:/Developer/Github/Lane_Change_Prediction -data D:/Cloud/CloudStation/@laboratory/Dataset/dataset_Lane_Change_Prediction -output D:/temp/Output/output_Lane_Change_Prediction -driver ID13_dev

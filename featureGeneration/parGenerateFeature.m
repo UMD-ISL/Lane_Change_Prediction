@@ -24,14 +24,17 @@ function parGenerateFeature()
                         'Median', 'Energy', 'Skewness', 'Kurtosis'};
                     
     
-    spmd (numselectedSigDataFiles)
-        fprintf('Generate feture vector for video: %d\n', labindex);
+    parfor i = 1 : numselectedSigDataFiles
         selectedSigFilePath = strcat(outputPath, '/signalSelectionOutput/', ...
-            selectedSigFilesName{1, labindex});
-        savefile = strcat(featureGenerationOutput, '/featureVector_', ...
-            num2str(labindex), '.mat');
+            selectedSigFilesName{1, i});
         
-        bar = load(selectedSigFilePath);    
+        [~, name, ~] = fileparts(selectedSigFilePath);
+        expression = '_';
+        splitStr = regexp(name, expression,'split');
+        savefile = strcat(featureGenerationOutput, '/', ...
+                        strrep(name, splitStr{1}, 'featureVector'), '.mat');
+        
+        bar = load(selectedSigFilePath);
         calFeatureVec(lenFeatureWindow, featureVecParams, ...
                                     bar.selectedSigsData, savefile);
     end

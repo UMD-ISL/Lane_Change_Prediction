@@ -10,22 +10,31 @@ function parPreprocessData()
     folderFiles = dir(strcat(outputPath, '/dataPreparationOutput'));
     folderFilesName = {folderFiles.name};
     
+    % use regular expression to select the target files
     expression = 'prepedData_*';
     DataFileIndex = ~cellfun(@isempty, (regexpi(folderFilesName,expression)));
     prepedDataFilesName = folderFilesName(DataFileIndex);
     numPrepedDataFiles = size(prepedDataFilesName, 2);
         
-    %% =============== part 1 =====================
+    %% ============== Convert cell matrix to double matrix ================
     tic;
-    spmd (numPrepedDataFiles)
-        fprintf('load prepred data file collection: %d\n', labindex);
+    % using parfor function to parallel process data (help spmd for more
+    % details)
+    parfor i = 1 : numPrepedDataFiles
+        fprintf('load prepred data file collection: %s\n', ...
+                    prepedDataFilesName{1, i});
         PrepedDataFilePath = strcat(outputPath, '/dataPreparationOutput/', ...
-            prepedDataFilesName{1, labindex});
+            prepedDataFilesName{1, i});
         
         bar = load(PrepedDataFilePath);
-        savefile = strcat(dataPreprocessOutput, '/preprocData_', ...
-                    num2str(labindex), '.mat');
-                
+        
+        [~, name, ~] = fileparts(PrepedDataFilePath);
+        expression = '_';
+        splitStr = regexp(name, expression,'split');
+        savefile = strcat(dataPreprocessOutput, '/', ...
+                        strrep(name, splitStr{1}, 'preprocData'), '.mat');
+        
+        % self-designed function: convertDataFormat.m
         convertDataFormat(bar, savefile);
     end
     toc;

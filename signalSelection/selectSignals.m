@@ -28,6 +28,8 @@ function selectSignals()
     for i = 1:numSyncDataFiles
         syncDataFilePath = strcat(outputPath, '/dataSynchronizationOutput/', ...
             syncDataFilesName{1, i});
+        
+        
         barData = load(syncDataFilePath);
         
         signalsVector = [barData.syncTarget.params, ... 
@@ -50,9 +52,13 @@ function selectSignals()
                         
         [~, selectedSigsInd]  = ismember(selectedSignals, signalsVector);
         selectedSigsData = signalsData(:, selectedSigsInd);
-                            
-        savefile = strcat(signalSelectionOutput, '/selectedSignalData_', ...
-                        num2str(i), '.mat');
+        
+        [~, name, ~] = fileparts(syncDataFilePath);
+        expression = '_';
+        splitStr = regexp(name, expression,'split');
+        savefile = strcat(signalSelectionOutput, '/', ...
+                        strrep(name, splitStr{1}, 'selectedSignalData'), '.mat');
+                    
         save(savefile, 'selectedSignals', 'selectedSigsData');
     end
     

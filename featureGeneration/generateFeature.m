@@ -23,10 +23,15 @@ function generateFeature()
                     
     
     for i = 1:numselectedSigDataFiles
+        
         selectedSigFilePath = strcat(outputPath, '/signalSelectionOutput/', ...
             selectedSigFilesName{1, i});
-        savefile = strcat(featureGenerationOutput, '/featureVector_', ...
-            num2str(i), '.mat');
+        
+        [~, name, ~] = fileparts(selectedSigFilePath);
+        expression = '_';
+        splitStr = regexp(name, expression,'split');
+        savefile = strcat(featureGenerationOutput, '/', ...
+                        strrep(name, splitStr{1}, 'featureVector'), '.mat');
         
         bar = load(selectedSigFilePath);
         calFeatureVec(lenFeatureWindow, featureVecParams, ...

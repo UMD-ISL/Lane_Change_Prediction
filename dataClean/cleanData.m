@@ -56,7 +56,14 @@ function cleanData()
     save(savefile, 'statis');
     
     for i = 1:numProcDataFiles
-        savefile = strcat(dataCleanOutput, '/cleanedData_', num2str(i), '.mat');
+        PreprpcDataFilePath = strcat(outputPath, '/dataPreprocessOutput/', ...
+            procDataFilesName{1, i});
+        [~, name, ~] = fileparts(PreprpcDataFilePath);
+        expression = '_';
+        splitStr = regexp(name, expression,'split');
+        savefile = strcat(dataCleanOutput, '/', ...
+                        strrep(name, splitStr{1}, 'cleanedData'), '.mat');
+                    
         cleanedGSR      = cleanedGSRdata(i);
         cleanedECG      = cleanedECGdata(i);
         cleanedRSP      = cleanedRSPdata(i);
