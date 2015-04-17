@@ -1,13 +1,22 @@
 function realtimeData = geneRealtimeData(videoInd, segmentStartTime, ...
                                 segmentEndTime)
+                            
     addpath(genpath('../utility/'));
     
     %%
     configFile = '../preamble/configuration.ini';
     [~, ~, outputPath] = loadGlobalPathSetting(configFile);
     
-    foo = load(strcat(outputPath,'/featureGenerationOutput/featureVector_',...
-            num2str(videoInd), '.mat'));
+    folderFiles = dir(strcat(outputPath, '/featureGenerationOutput'));
+    folderFilesName = {folderFiles.name};
+    
+    expression = 'featureVector_*';
+    DataFileIndex = ~cellfun(@isempty, (regexpi(folderFilesName,expression)));
+    featureVecFilesName = folderFilesName(DataFileIndex);
+    
+    featureVecFilePath = strcat(outputPath, '/featureGenerationOutput/', ...
+            featureVecFilesName{1, videoInd});
+    foo = load(featureVecFilePath);
     scaledFeatureVec = foo.scaledFeatureVec;
         
     bar = load(strcat(outputPath,'/dataPreprocessOutput/numStartTimeTable.mat'));

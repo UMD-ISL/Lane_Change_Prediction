@@ -1,7 +1,14 @@
-function [  ] = realtimeTesting(  )
+function [  ] = realtimeTrainTest(  )
 %REALTIMETESTING Summary of this function goes here
 %   Detailed explanation goes here
-    clear all; close all;
+    clear all; clc;     % Clear environment, and start counting running time
+    addpath(genpath('../utility/'));
+    
+    %%
+    configFile = '../preamble/configuration.ini';
+    [~, ~, outputPath] = loadGlobalPathSetting(configFile);
+    
+    
     vidSegsStartEndTime = { '00:09:00.000' '00:10:00.000';
                             '00:38:35.000' '00:39:35.000';
                             '00:49:23.000' '00:50:23.000';
@@ -11,7 +18,8 @@ function [  ] = realtimeTesting(  )
                         };
                     
     vidSegsData = cell(size(vidSegsStartEndTime, 1), 1);
-    cat = load('testingResult.mat');
+    
+    cat = load(strcat(outputPath, '/eventTrainTestOutput/testingResult.mat'));
     statis = cat.statis;
     net = statis.net;
     
