@@ -12,8 +12,8 @@ Dataset is forbidden to share on the Github.
 
 #### Code
 ##### Please run the code contained in this folder in the following sequence:
-1. Change the **configuration file** to set the program home path and data repository path.
-	* configuration.ini
+1. Change the **configuration file** to set the program home path, data repository path and program output path.
+	* Details are in **preamble** folder.
 2. **Strating time exraction pahse**
 	* start_time_generate.m
 3. Synchronization phase
