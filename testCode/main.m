@@ -3,7 +3,7 @@ function main()
     clc, clear all; close all;
     
     addpath(genpath('../utility/'));
-    rng(1234,'twister');
+    rand('twister', 5489);
     
     try
         delete('outfile.txt');
@@ -22,7 +22,7 @@ function main()
 
     % Set up Division of Data for Training, Validation, Testing
     testRatio = 15/100;
- 
+    rand('twister', sum(100*clock));
     numTestLCevents = round(testRatio * numLCevents);
     testLCidx = randsample(size(LCeventList,1), numTestLCevents, false); % without replacement
     testLCevents = LCeventList(testLCidx, :);
@@ -40,62 +40,101 @@ function main()
     trainValNLCevents = NLCeventList(trainValNLCidx, :);
     
     [testInputs, testTargets] = genDataTarget(testEventList);
-
-    %%
-    NNarchitecArray     = geneNNarchitecArray();
-%     NNarchitecArray     = NNarchitecArray(1:3, :);   % small dataset
     
-    numValFolder = 10;
-    
-    LCindices = crossvalind('Kfold', size(trainValLCevents, 1), numValFolder);
-    NLCindices = crossvalind('Kfold', size(trainValNLCevents, 1), numValFolder);
-    
+    fgSelectModel = 0;
+    %% Start model selection
     %% start k-folder cross-validation
     
-    diary off;
-    logBufferSize = 50;
-    outputFileInd = 1;
-    diary(strcat('./logFolder/diary_', num2str(outputFileInd), ...
-                '.txt'));        
-    NNresultLogArray(size(logBufferSize, 1), 1) = struct();
-            
-    startTimeTemp = tic;
-    for i = 1:size(NNarchitecArray, 1)
+    if fgSelectModel
+        %%
+        NNarchitecArray     = geneNNarchitecArray();
+        LCindices = crossvalind('Kfold', size(trainValLCevents, 1), numValFolder);
+        NLCindices = crossvalind('Kfold', size(trainValNLCevents, 1), numValFolder);
+        numValFolder = 10;
+        
+        diary off;
+        logBufferSize = 50;
+        outputFileInd = 1;
+        diary(strcat('./logFolder/diary_', num2str(outputFileInd), ...
+                    '.txt'));        
+        NNresultLogArray(size(logBufferSize, 1), 1) = struct();
 
-        NNlogInd = mod(i, logBufferSize);
-        if 0 == NNlogInd
-            NNlogInd = logBufferSize;
-        end
-        
-        fprintf('Neural network Architecture index -- %d\n', i);
-        NNconfigParamVec = NNarchitecArray(i, :);
-        [net, tr, logStatis] = crossValidFunction(NNconfigParamVec, ...
-                            trainValLCevents, LCindices, ...
-                            trainValNLCevents, NLCindices, ...
-                            numValFolder);
-        
-        disp(logStatis{1});
-        fprintf('****************************************************\n\n');
-        
-        NNresultLogArray(NNlogInd).net = net;
-        NNresultLogArray(NNlogInd).tr  = tr;
-        NNresultLogArray(NNlogInd).statis = logStatis;
-        
-        close all;
-        
-        flgSaveOutput = ~mod(i, logBufferSize) || ...
-                            size(NNarchitecArray, 1) == i;
-        if flgSaveOutput
-            diary off;
-            save(strcat('./logFolder/TrainingResult_', ...
-                    num2str(outputFileInd), '.mat'), 'NNresultLogArray');
-            
-            if i ~= size(NNarchitecArray, 1)
-                outputFileInd = outputFileInd + 1;
-                diary(strcat('./logFolder/diary_', num2str(outputFileInd), ...
-                    '.txt'));
+        startTimeTemp = tic;
+        for i = 1:size(NNarchitecArray, 1)
+
+            NNlogInd = mod(i, logBufferSize);
+            if 0 == NNlogInd
+                NNlogInd = logBufferSize;
+            end
+
+            fprintf('Neural network Architecture index -- %d\n', i);
+            NNconfigParamVec = NNarchitecArray(i, :);
+            [net, tr, logStatis] = crossValidFunction(NNconfigParamVec, ...
+                                trainValLCevents, LCindices, ...
+                                trainValNLCevents, NLCindices, ...
+                                numValFolder);
+
+            disp(logStatis{1});
+            fprintf('****************************************************\n\n');
+
+            NNresultLogArray(NNlogInd).net = net;
+            NNresultLogArray(NNlogInd).tr  = tr;
+            NNresultLogArray(NNlogInd).statis = logStatis;
+
+            close all;
+
+            flgSaveOutput = ~mod(i, logBufferSize) || ...
+                                size(NNarchitecArray, 1) == i;
+            if flgSaveOutput
+                diary off;
+                save(strcat('./logFolder/TrainingResult_', ...
+                        num2str(outputFileInd), '.mat'), 'NNresultLogArray');
+
+                if i ~= size(NNarchitecArray, 1)
+                    outputFileInd = outputFileInd + 1;
+                    diary(strcat('./logFolder/diary_', num2str(outputFileInd), ...
+                        '.txt'));
+                end
             end
         end
+        allTimes = toc(startTimeTemp);
     end
-    allTimes = toc(startTimeTemp);
+    
+    net = geneOneNN(geneBestNN());
+    net = configure(net, testInputs, testTargets);
+    trainValEventList = [trainValLCevents; trainValNLCevents];
+    [trainValInputs, trainValTargets] = genDataTarget(trainValEventList);
+    
+    [net, tr] = train(net, trainValInputs, trainValTargets);
+    
+    trainValOutputs = net(trainValInputs);
+        
+    testOutputs = net(testInputs); % confusion matrix
+    [c, cm, ind, per] = confusion(testTargets, testOutputs);
+    
+    numTPpoints = cm(1, 1);  numFNpoints = cm(1, 2);
+    numFPpoints = cm(2, 1);  numTNpoints = cm(2, 2);
+            
+    statis.accuracy = (numTPpoints + numTNpoints)/(numTPpoints + ...
+                                 numFPpoints + numFNpoints + numTNpoints);
+                             
+    statis.precision   = numTPpoints / (numTPpoints + numFPpoints);
+    statis.sensitivity = numTPpoints / (numTPpoints + numFNpoints);
+    statis.specificity = numTNpoints / (numFPpoints + numTNpoints);
+    
+    statis.recall      = statis.sensitivity;
+    statis.Fscore      =  2 * numTPpoints / (2 * numTPpoints + ...
+                                    numFPpoints + numFNpoints);
+
+    statis.c             = c;
+    statis.cm            = cm;
+    statis.ind           = ind;
+    statis.per           = per;
+    statis.net           = net;
+    statis.tr            = tr; 
+    
+    plotconfusion(trainValTargets, trainValOutputs, 'training', ...
+                testTargets, testOutputs, 'testing');
+    
+    save('testingResult.mat', 'statis');
 end

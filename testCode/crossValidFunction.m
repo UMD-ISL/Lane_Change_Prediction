@@ -26,11 +26,7 @@ function [net, tr, logStatis] = crossValidFunction(NNconfigParamVec, ...
             
             net = geneOneNN(NNconfigParamVec);
             net = configure(net,valInputs, valTargets);
-%             cell2mat(net.IW)
-            
-            initlay(net);
-%             cell2mat(net.IW)
-            
+
             fprintf('-------------------------------------\n');
             fprintf('The %dth validation\n', k);
             [net,tr] = train(net,trainInputs,trainTargets);
