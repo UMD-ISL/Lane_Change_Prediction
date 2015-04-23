@@ -38,7 +38,7 @@ function eventTrainTest()
     trainValLCidx = setdiff(1:size(LCeventList,1), testLCidx)';
     trainValLCevents = LCeventList(trainValLCidx, :);
     
-    trainValNLCidx = setdiff(1:size(NLCeventList,1), testLCidx)';
+    trainValNLCidx = setdiff(1:size(NLCeventList,1), testNLCidx)';
     trainValNLCevents = NLCeventList(trainValNLCidx, :);
     
     [testInputs, testTargets] = genDataTarget(testEventList);
@@ -55,11 +55,12 @@ function eventTrainTest()
         NNarchitecArray     = geneNNarchitecArray();
         
         %% start k-folder cross-validation
+        numValFolder = 10;
+        
         LCindices = crossvalind('Kfold', size(trainValLCevents, 1), ...
                                 numValFolder);
         NLCindices = crossvalind('Kfold', size(trainValNLCevents, 1), ...
                                 numValFolder);
-        numValFolder = 10;
         
         diary off;
         logBufferSize = 50;

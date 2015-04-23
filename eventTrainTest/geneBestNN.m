@@ -1,4 +1,4 @@
-function NNarchitecArray = geneNNarchitecArray()
+function NNarchitecArray = geneBestNN()
 
     configParams.hiddenLayerSize    = [3];
     
